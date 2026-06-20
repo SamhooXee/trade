@@ -70,7 +70,28 @@ middleware.ts        # Next.js middleware
 e2e/                 # Playwright
 ```
 
+## 赋予 admin 角色
+
+admin 角色通过 Supabase 服务端字段 `app_metadata.role` 控制。步骤:
+
+1. 登录 [Supabase Dashboard](https://app.supabase.com)
+2. 进入项目 → **Authentication** → **Users**
+3. 找到目标用户,点击进入详情
+4. 滚动到 **Raw App Meta Data**,填入:
+   ```json
+   {"role": "admin"}
+   ```
+5. 保存
+
+> 修改后,**当前会话的 JWT 仍是旧版本**,需要让该用户**退出再登录**才能拿到新角色。详见 `docs/superpowers/specs/2026-06-20-block1-admin-role-design.md` §6.4。
+
+### E2E 测试用 admin 账号
+
+E2E(`e2e/admin.spec.ts`)需要一个预置 admin 账号。手工预置步骤同上,推荐邮箱:`admin-e2e@block1-test.com`。
+
 ## 文档
 
 - 设计规范:`docs/superpowers/specs/2026-06-20-block1-auth-design.md`
 - 实施计划:`docs/superpowers/plans/2026-06-20-block1-auth.md`
+- admin 角色设计:`docs/superpowers/specs/2026-06-20-block1-admin-role-design.md`
+- admin 角色实施计划:`docs/superpowers/plans/2026-06-20-block1-admin-role.md`
