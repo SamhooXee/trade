@@ -17,7 +17,6 @@ export function mapAuthError(error: AuthErrorLike | null | undefined): string {
   const code = error.code
   if (code && code in MESSAGES) return MESSAGES[code]
   if (typeof process !== 'undefined' && process.env.NODE_ENV !== 'production') {
-    // eslint-disable-next-line no-console
     console.warn('[mapAuthError] unmapped code:', code, 'message:', error.message)
   }
   return FALLBACK
