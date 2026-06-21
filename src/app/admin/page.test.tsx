@@ -4,14 +4,20 @@ import { render, screen } from '@testing-library/react'
 // mocks 必须在 import 之前
 // redirect 必须 throw,模拟 Next.js 真实行为(NEXT_REDIRECT);
 // 否则 mock 成 no-op 会让函数继续 fall through,渲染 Forbidden,断言失败
-const { mockGetUser, mockRedirect } = vi.hoisted(() => ({
+const { mockGetUser, mockRedirect, mockFrom } = vi.hoisted(() => ({
   mockGetUser: vi.fn(),
   mockRedirect: vi.fn((url: string) => { throw new Error(`REDIRECT:${url}`) }),
+  mockFrom: vi.fn().mockReturnValue({
+    select: vi.fn().mockReturnValue({
+      order: vi.fn().mockResolvedValue({ data: [], error: null }),
+    }),
+  }),
 }))
 
 vi.mock('@/lib/supabase/server', () => ({
   createClient: async () => ({
     auth: { getUser: mockGetUser },
+    from: mockFrom,
   }),
 }))
 
@@ -72,7 +78,7 @@ describe('AdminPage', () => {
     const element = await AdminPage()
     render(element)
     expect(mockRedirect).not.toHaveBeenCalled()
-    expect(screen.getByText('Admin 控制台 / Admin Console')).toBeInTheDocument()
+    expect(screen.getByText('激活码管理 / Activation Keys')).toBeInTheDocument()
     expect(screen.getAllByText('admin@x.com').length).toBeGreaterThan(0)
   })
 })
