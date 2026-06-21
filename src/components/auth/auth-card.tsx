@@ -13,16 +13,16 @@ export function AuthCard({ defaultTab = 'signin' as Tab }: { defaultTab?: Tab })
   return (
     <Card className="w-full max-w-sm bg-white rounded-xl shadow-xl shadow-indigo-100/60 p-8 border-0">
       <Tabs value={tab} onValueChange={(v) => setTab(v as Tab)}>
-        <TabsList className="grid grid-cols-2 bg-transparent border-b border-gray-200 mb-6 h-auto p-0">
+        <TabsList className="grid grid-cols-2 bg-transparent mb-6 h-auto p-0 -mx-8 w-auto">
           <TabsTrigger
             value="signin"
-            className="rounded-none bg-transparent shadow-none data-[state=active]:text-indigo-600 data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 data-[state=active]:-mb-px py-3"
+            className="rounded-none bg-transparent shadow-none border-b-2 border-b-gray-200 data-[state=active]:text-indigo-600 data-[state=active]:border-b-indigo-600 border-t-0 border-x-0 py-3 outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0"
           >
             登录 / Sign in
           </TabsTrigger>
           <TabsTrigger
             value="signup"
-            className="rounded-none bg-transparent shadow-none data-[state=active]:text-indigo-600 data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 data-[state=active]:-mb-px py-3"
+            className="rounded-none bg-transparent shadow-none border-b-2 border-b-gray-200 data-[state=active]:text-indigo-600 data-[state=active]:border-b-indigo-600 border-t-0 border-x-0 py-3 outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0"
           >
             注册 / Sign up
           </TabsTrigger>
