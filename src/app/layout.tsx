@@ -1,20 +1,30 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import { getLanguage, getTranslations } from '@/lib/i18n'
+import { LanguageProvider } from '@/components/providers/language-provider'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
-export const metadata: Metadata = {
-  title: 'Block1',
-  description: 'Block1 — 登录/注册 / Sign in or sign up',
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getTranslations()
+  return {
+    title: t('auth.metaTitle'),
+    description: t('auth.metaDesc'),
+  }
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const lang = await getLanguage()
+
   return (
-    <html lang="zh-CN" className={inter.variable} suppressHydrationWarning>
+    <html lang={lang === 'en' ? 'en' : 'zh-CN'} className={inter.variable} suppressHydrationWarning>
       <body className="font-sans antialiased min-h-screen bg-gradient-to-br from-indigo-50 to-fuchsia-50">
-        {children}
+        <LanguageProvider initialLang={lang}>
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   )
 }
+

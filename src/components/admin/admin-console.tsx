@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useState, useTransition } from 'react'
+import { useActionState, useState, useTransition, useEffect } from 'react'
 import Link from 'next/link'
 import { generateKeysAction, deleteKeyAction } from '@/app/actions/admin-keys'
 import { Button } from '@/components/ui/button'
@@ -9,6 +9,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { signOutAction } from '@/app/actions/auth'
+import { useLanguage } from '@/components/providers/language-provider'
+import { LanguageSwitcher } from '@/components/providers/language-provider'
 import {
   Copy,
   Trash2,
@@ -44,6 +46,7 @@ type Props = {
 export function AdminConsole({ email, initialKeys }: Props) {
   const [formState, formAction, isPending] = useActionState(generateKeysAction, null)
   const [isDeleting, startDeleteTransition] = useTransition()
+  const { t, lang } = useLanguage()
   
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const [deleteError, setDeleteError] = useState<string | null>(null)
@@ -64,12 +67,12 @@ export function AdminConsole({ email, initialKeys }: Props) {
   }
 
   const handleDelete = (id: string) => {
-    if (confirm('确定要删除这个激活码吗？此操作不可逆。/ Are you sure you want to delete this key? This action is irreversible.')) {
+    if (confirm(t('admin.deleteConfirm'))) {
       startDeleteTransition(async () => {
         setDeleteError(null)
         const res = await deleteKeyAction(id)
         if (res.error) {
-          setDeleteError(res.error)
+          setDeleteError(t(res.error))
         }
       })
     }
@@ -80,26 +83,26 @@ export function AdminConsole({ email, initialKeys }: Props) {
       case 'ACTIVE':
         return (
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-            可兑换 / Active
+            {t('admin.statusActive')}
           </span>
         )
       case 'INACTIVE':
         return (
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">
-            已使用 / Redeemed
+            {t('admin.statusRedeemed')}
           </span>
         )
       case 'EXPIRED':
         return (
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200">
-            已过期 / Expired
+            {t('admin.statusExpired')}
           </span>
         )
     }
   }
 
   const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleString('zh-CN', {
+    return new Date(dateStr).toLocaleString(lang === 'en' ? 'en-US' : 'zh-CN', {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
@@ -141,12 +144,15 @@ export function AdminConsole({ email, initialKeys }: Props) {
             <User className="h-4 w-4 text-indigo-500" />
             <span className="text-sm font-medium text-indigo-900">{email}</span>
           </div>
+          
+          <LanguageSwitcher />
+
           <Link href="/dashboard" className="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors flex items-center gap-1">
-            <ArrowLeft className="h-4 w-4" /> 返回主页 / Dashboard
+            <ArrowLeft className="h-4 w-4" /> {t('common.back')}
           </Link>
           <form action={signOutAction}>
-            <Button type="submit" variant="ghost" size="sm" className="text-gray-500 hover:text-rose-600 transition-colors">
-              <LogOut className="h-4 w-4 mr-1" /> 退出 / Sign out
+            <Button type="submit" variant="ghost" size="sm" className="text-gray-500 hover:text-rose-600 transition-colors cursor-pointer">
+              <LogOut className="h-4 w-4 mr-1" /> {t('common.signOut')}
             </Button>
           </form>
         </div>
@@ -160,31 +166,31 @@ export function AdminConsole({ email, initialKeys }: Props) {
             <div className="h-1.5 bg-indigo-600 w-full" />
             <CardHeader className="pb-4">
               <CardTitle className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                <Plus className="h-5 w-5 text-indigo-600" /> 生成激活码 / Generate Keys
+                <Plus className="h-5 w-5 text-indigo-600" /> {t('admin.generateKeys')}
               </CardTitle>
               <CardDescription className="text-xs text-gray-600">
-                批量生成用于兑换积分的 Activation Key。
+                {t('admin.generateDesc')}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <form action={formAction} className="space-y-4">
                 {formState?.error && (
                   <Alert variant="destructive" className="bg-red-50 text-red-900 border-red-200">
-                    <AlertDescription className="text-xs">{formState.error}</AlertDescription>
+                    <AlertDescription className="text-xs">{t(formState.error)}</AlertDescription>
                   </Alert>
                 )}
 
                 {formState?.success && (
                   <Alert className="bg-emerald-50 text-emerald-900 border-emerald-200">
                     <AlertDescription className="text-xs">
-                      激活码生成成功！已自动更新下方列表。
+                      {t('admin.generateSuccess')}
                     </AlertDescription>
                   </Alert>
                 )}
 
                 <div className="space-y-1.5">
                   <Label htmlFor="points" className="text-xs font-semibold text-gray-700 flex items-center gap-1">
-                    <Coins className="h-3.5 w-3.5 text-indigo-500" /> 兑换分值 / Points per Key
+                    <Coins className="h-3.5 w-3.5 text-indigo-500" /> {t('admin.pointsPerKey')}
                   </Label>
                   <Input
                     id="points"
@@ -196,13 +202,13 @@ export function AdminConsole({ email, initialKeys }: Props) {
                     className="h-10 bg-gray-50/50 focus:bg-white focus:ring-indigo-500 focus:border-indigo-500 text-sm"
                   />
                   {formState?.fieldErrors?.points && (
-                    <p className="text-xs text-red-500 font-medium">{formState.fieldErrors.points[0]}</p>
+                    <p className="text-xs text-red-500 font-medium">{t(formState.fieldErrors.points[0])}</p>
                   )}
                 </div>
 
                 <div className="space-y-1.5">
                   <Label htmlFor="expiresIn" className="text-xs font-semibold text-gray-700 flex items-center gap-1">
-                    <Calendar className="h-3.5 w-3.5 text-indigo-500" /> 有效天数 / Expiration (Days)
+                    <Calendar className="h-3.5 w-3.5 text-indigo-500" /> {t('admin.expiresInDays')}
                   </Label>
                   <Input
                     id="expiresIn"
@@ -214,13 +220,13 @@ export function AdminConsole({ email, initialKeys }: Props) {
                     className="h-10 bg-gray-50/50 focus:bg-white focus:ring-indigo-500 focus:border-indigo-500 text-sm"
                   />
                   {formState?.fieldErrors?.expiresIn && (
-                    <p className="text-xs text-red-500 font-medium">{formState.fieldErrors.expiresIn[0]}</p>
+                    <p className="text-xs text-red-500 font-medium">{t(formState.fieldErrors.expiresIn[0])}</p>
                   )}
                 </div>
 
                 <div className="space-y-1.5">
                   <Label htmlFor="quantity" className="text-xs font-semibold text-gray-700 flex items-center gap-1">
-                    <Layers className="h-3.5 w-3.5 text-indigo-500" /> 生成数量 / Quantity
+                    <Layers className="h-3.5 w-3.5 text-indigo-500" /> {t('admin.quantity')}
                   </Label>
                   <Input
                     id="quantity"
@@ -233,7 +239,7 @@ export function AdminConsole({ email, initialKeys }: Props) {
                     className="h-10 bg-gray-50/50 focus:bg-white focus:ring-indigo-500 focus:border-indigo-500 text-sm"
                   />
                   {formState?.fieldErrors?.quantity && (
-                    <p className="text-xs text-red-500 font-medium">{formState.fieldErrors.quantity[0]}</p>
+                    <p className="text-xs text-red-500 font-medium">{t(formState.fieldErrors.quantity[0])}</p>
                   )}
                 </div>
 
@@ -245,12 +251,12 @@ export function AdminConsole({ email, initialKeys }: Props) {
                   {isPending ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      生成中 / Generating...
+                      {t('admin.generating')}
                     </>
                   ) : (
                     <>
                       <KeyRound className="h-4 w-4" />
-                      批量生成 / Generate Keys
+                      {t('admin.generateKeys')}
                     </>
                   )}
                 </Button>
@@ -271,9 +277,9 @@ export function AdminConsole({ email, initialKeys }: Props) {
             <CardHeader className="pb-4">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                  <CardTitle className="text-xl font-bold text-gray-900">激活码管理 / Activation Keys</CardTitle>
+                  <CardTitle className="text-xl font-bold text-gray-900">{t('admin.keyManagement')}</CardTitle>
                   <CardDescription className="text-xs text-gray-600">
-                    查看、筛选和删除系统中的激活码。
+                    {t('admin.managementDesc')}
                   </CardDescription>
                 </div>
 
@@ -291,10 +297,10 @@ export function AdminConsole({ email, initialKeys }: Props) {
                           : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
                       }`}
                     >
-                      {item === 'ALL' && '全部 / All'}
-                      {item === 'ACTIVE' && '有效 / Active'}
-                      {item === 'INACTIVE' && '已使用 / Redeemed'}
-                      {item === 'EXPIRED' && '已过期 / Expired'}
+                      {item === 'ALL' && t('admin.filterAll')}
+                      {item === 'ACTIVE' && t('admin.filterActive')}
+                      {item === 'INACTIVE' && t('admin.filterRedeemed')}
+                      {item === 'EXPIRED' && t('admin.filterExpired')}
                     </Button>
                   ))}
                 </div>
@@ -304,7 +310,7 @@ export function AdminConsole({ email, initialKeys }: Props) {
               <div className="relative mt-4">
                 <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="搜索激活码或兑换邮箱 / Search key code or user email..."
+                  placeholder={t('admin.searchPlaceholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-9 h-9 bg-gray-50/50 focus:bg-white text-sm"
@@ -317,19 +323,19 @@ export function AdminConsole({ email, initialKeys }: Props) {
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="bg-gray-50/80 border-y border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider">
-                      <th className="px-6 py-3 font-semibold">激活码 / Key Code</th>
-                      <th className="px-6 py-3 font-semibold">积分值 / Points</th>
-                      <th className="px-6 py-3 font-semibold">状态 / Status</th>
-                      <th className="px-6 py-3 font-semibold">过期时间 / Expires At</th>
-                      <th className="px-6 py-3 font-semibold">兑换人 / Redeemed By</th>
-                      <th className="px-6 py-3 font-semibold">操作 / Actions</th>
+                      <th className="px-6 py-3 font-semibold">{t('dashboard.keyCode')}</th>
+                      <th className="px-6 py-3 font-semibold">{t('dashboard.pointsVal')}</th>
+                      <th className="px-6 py-3 font-semibold">{t('admin.status')}</th>
+                      <th className="px-6 py-3 font-semibold">{t('admin.expiresAt')}</th>
+                      <th className="px-6 py-3 font-semibold">{t('admin.redeemedBy')}</th>
+                      <th className="px-6 py-3 font-semibold">{t('admin.actions')}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100 text-sm">
                     {filteredKeys.length === 0 ? (
                       <tr>
-                        <td colSpan={6} className="px-6 py-10 text-center text-gray-500 text-xs">
-                          没有找到符合条件的激活码 / No keys found
+                        <td colSpan={6} className="px-6 py-10 text-center text-gray-500 text-xs font-medium">
+                          {t('admin.noKeys')}
                         </td>
                       </tr>
                     ) : (
@@ -347,7 +353,7 @@ export function AdminConsole({ email, initialKeys }: Props) {
                                   size="sm"
                                   onClick={() => handleCopy(key.id, key.code)}
                                   className="h-8 w-8 p-0 text-gray-400 hover:text-indigo-600 rounded-md cursor-pointer"
-                                  title="复制 / Copy"
+                                  title={copiedId === key.id ? t('admin.copied') : t('admin.copyTooltip')}
                                 >
                                   {copiedId === key.id ? (
                                     <Check className="h-4 w-4 text-emerald-600 animate-bounce" />
@@ -374,7 +380,7 @@ export function AdminConsole({ email, initialKeys }: Props) {
                                   <span className="font-semibold text-gray-800">{key.redeemedBy}</span>
                                   {key.redeemedAt && (
                                     <span className="text-[10px] text-gray-500">
-                                      于 {formatDate(key.redeemedAt)}
+                                      {t('admin.at')} {formatDate(key.redeemedAt)}
                                     </span>
                                   )}
                                 </div>
@@ -389,7 +395,7 @@ export function AdminConsole({ email, initialKeys }: Props) {
                                 onClick={() => handleDelete(key.id)}
                                 disabled={isDeleting}
                                 className="h-8 w-8 p-0 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md cursor-pointer transition-colors"
-                                title="删除 / Delete"
+                                title={t('admin.deleteTooltip')}
                               >
                                 <Trash2 className="h-4 w-4" />
                               </Button>

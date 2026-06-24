@@ -25,6 +25,7 @@ vi.mock('next/navigation', () => ({
   redirect: mockRedirect,
 }))
 
+import { LanguageProvider } from '@/components/providers/language-provider'
 import AdminPage from './page'
 
 beforeEach(() => {
@@ -54,7 +55,11 @@ describe('AdminPage', () => {
       error: null,
     })
     const element = await AdminPage()
-    render(element)
+    render(
+      <LanguageProvider initialLang="zh">
+        {element}
+      </LanguageProvider>
+    )
     expect(mockRedirect).not.toHaveBeenCalled()
     expect(screen.getByText(/403 - 无权限/)).toBeInTheDocument()
     expect(screen.queryByText(/Admin 控制台/)).not.toBeInTheDocument()
@@ -76,9 +81,14 @@ describe('AdminPage', () => {
       error: null,
     })
     const element = await AdminPage()
-    render(element)
+    render(
+      <LanguageProvider initialLang="zh">
+        {element}
+      </LanguageProvider>
+    )
     expect(mockRedirect).not.toHaveBeenCalled()
-    expect(screen.getByText('激活码管理 / Activation Keys')).toBeInTheDocument()
+    expect(screen.getByText(/激活码管理|activation keys/i)).toBeInTheDocument()
     expect(screen.getAllByText('admin@x.com').length).toBeGreaterThan(0)
   })
 })
+

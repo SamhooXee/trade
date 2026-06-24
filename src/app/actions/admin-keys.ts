@@ -7,9 +7,9 @@ import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
 const generateKeysSchema = z.object({
-  points: z.coerce.number().int().min(1, '积分必须大于0 / Points must be positive'),
-  expiresIn: z.coerce.number().int().min(1, '天数必须大于0 / Lifespan must be positive'),
-  quantity: z.coerce.number().int().min(1, '数量必须大于0 / Quantity must be positive').max(100, '一次最多生成100个 / Max 100 keys at once'),
+  points: z.coerce.number().int().min(1, 'errors.points_positive'),
+  expiresIn: z.coerce.number().int().min(1, 'errors.lifespan_positive'),
+  quantity: z.coerce.number().int().min(1, 'errors.quantity_positive').max(100, 'errors.quantity_max'),
 })
 
 export type AdminKeyFormState = {
@@ -33,7 +33,7 @@ export async function generateKeysAction(
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user || !isAdmin(user)) {
-    return { error: '未授权：需要管理员权限 / Unauthorized: Admin privileges required' }
+    return { error: 'errors.adminRequired' }
   }
 
   const parsed = generateKeysSchema.safeParse({
@@ -56,7 +56,7 @@ export async function generateKeysAction(
     revalidatePath('/admin')
     return { success: true }
   } catch (err) {
-    return { error: err instanceof Error ? err.message : '生成失败 / Generation failed' }
+    return { error: err instanceof Error ? err.message : 'errors.fallback' }
   }
 }
 
@@ -68,7 +68,7 @@ export async function deleteKeyAction(id: string): Promise<{ success?: boolean; 
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user || !isAdmin(user)) {
-    return { error: '未授权：需要管理员权限 / Unauthorized: Admin privileges required' }
+    return { error: 'errors.adminRequired' }
   }
 
   try {
@@ -76,6 +76,7 @@ export async function deleteKeyAction(id: string): Promise<{ success?: boolean; 
     revalidatePath('/admin')
     return { success: true }
   } catch (err) {
-    return { error: err instanceof Error ? err.message : '删除失败 / Deletion failed' }
+    return { error: err instanceof Error ? err.message : 'errors.fallback' }
   }
 }
+

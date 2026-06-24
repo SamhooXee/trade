@@ -13,6 +13,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 
+import { useLanguage } from '@/components/providers/language-provider'
+
 const inputClass =
   'h-11 rounded-lg border-gray-200 bg-gray-50 focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200'
 
@@ -20,6 +22,7 @@ export function SignUpForm() {
   const [isPending, startTransition] = useTransition()
   const [serverError, setServerError] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
+  const { t } = useLanguage()
 
   const {
     register,
@@ -48,12 +51,12 @@ export function SignUpForm() {
       {serverError && (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{serverError}</AlertDescription>
+          <AlertDescription>{t(serverError)}</AlertDescription>
         </Alert>
       )}
 
       <div className="space-y-1.5">
-        <Label htmlFor="signup-email">邮箱 / Email</Label>
+        <Label htmlFor="signup-email">{t('auth.email')}</Label>
         <Input
           id="signup-email"
           type="email"
@@ -63,12 +66,12 @@ export function SignUpForm() {
           {...register('email')}
         />
         {errors.email && (
-          <p className="text-xs text-red-600">{errors.email.message}</p>
+          <p className="text-xs text-red-600">{t(errors.email.message!)}</p>
         )}
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="signup-password">密码 / Password</Label>
+        <Label htmlFor="signup-password">{t('auth.password')}</Label>
         <div className="relative">
           <Input
             id="signup-password"
@@ -81,19 +84,19 @@ export function SignUpForm() {
           <button
             type="button"
             onClick={() => setShowPassword((s) => !s)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-            aria-label={showPassword ? '隐藏密码' : '显示密码'}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 font-sans"
+            aria-label={showPassword ? 'Hide password' : 'Show password'}
           >
             {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
         </div>
         {errors.password && (
-          <p className="text-xs text-red-600">{errors.password.message}</p>
+          <p className="text-xs text-red-600">{t(errors.password.message!)}</p>
         )}
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="signup-confirm">确认密码 / Confirm password</Label>
+        <Label htmlFor="signup-confirm">{t('auth.confirmPassword')}</Label>
         <Input
           id="signup-confirm"
           type={showPassword ? 'text' : 'password'}
@@ -103,22 +106,22 @@ export function SignUpForm() {
           {...register('confirmPassword')}
         />
         {errors.confirmPassword && (
-          <p className="text-xs text-red-600">{errors.confirmPassword.message}</p>
+          <p className="text-xs text-red-600">{t(errors.confirmPassword.message!)}</p>
         )}
       </div>
 
       <Button
         type="submit"
         disabled={isPending}
-        className="h-11 w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-md shadow-indigo-200"
+        className="h-11 w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-md shadow-indigo-200 cursor-pointer"
       >
-        {isPending ? '注册中… / Signing up…' : '注册 / Sign up'}
+        {isPending ? t('auth.signingUp') : t('auth.signUp')}
       </Button>
 
       <p className="text-center text-sm text-gray-500">
-        已有账号?{' '}
-        <Link href="/?tab=signin" className="text-indigo-600 hover:underline">
-          去登录 / Sign in
+        {t('auth.hasAccount')}{' '}
+        <Link href="/?tab=signin" className="text-indigo-600 hover:underline font-semibold">
+          {t('auth.toSignIn')}
         </Link>
       </p>
     </form>

@@ -44,7 +44,7 @@ describe('signInAction', () => {
   it('returns error on invalid_credentials', async () => {
     mockSignInWithPassword.mockResolvedValueOnce({ error: { code: 'invalid_credentials' } })
     const state = await signInAction(null, fd({ email: 'a@b.com', password: '123456' }))
-    expect(state?.error).toMatch(/邮箱或密码|Invalid email or password/)
+    expect(state?.error).toBe('errors.invalid_credentials')
   })
 
   it('redirects to /dashboard on success', async () => {
@@ -63,8 +63,9 @@ describe('signUpAction', () => {
   it('returns error on user_already_exists', async () => {
     mockSignUp.mockResolvedValueOnce({ error: { code: 'user_already_exists' } })
     const state = await signUpAction(null, fd({ email: 'a@b.com', password: 'password1', confirmPassword: 'password1' }))
-    expect(state?.error).toMatch(/已注册|already registered/i)
+    expect(state?.error).toBe('errors.user_already_exists')
   })
+
 
   it('redirects to /dashboard on success', async () => {
     mockSignUp.mockResolvedValueOnce({ error: null })

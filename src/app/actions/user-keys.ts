@@ -5,7 +5,7 @@ import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
 const redeemKeySchema = z.object({
-  code: z.string().min(1, '请输入激活码 / Key code is required').trim(),
+  code: z.string().min(1, 'errors.key_required').trim(),
 })
 
 export type RedeemFormState = {
@@ -37,8 +37,9 @@ export async function redeemKeyAction(
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return { error: '未登录，请先登录 / Unauthorized: Please sign in first' }
+    return { error: 'errors.unauthorized' }
   }
+
 
   try {
     const { data, error } = await supabase.rpc('block1_redeem_key', {
@@ -68,6 +69,7 @@ export async function redeemKeyAction(
       newBalance: result.newBalance,
     }
   } catch (err) {
-    return { error: err instanceof Error ? err.message : '兑换失败，发生未知错误 / Redemption failed due to unknown error' }
+    return { error: err instanceof Error ? err.message : 'errors.fallback' }
   }
 }
+

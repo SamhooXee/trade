@@ -5,11 +5,14 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Card } from '@/components/ui/card'
 import { SignInForm } from './sign-in-form'
 import { SignUpForm } from './sign-up-form'
+import { useLanguage } from '@/components/providers/language-provider'
 
 type Tab = 'signin' | 'signup'
 
 export function AuthCard({ defaultTab = 'signin' as Tab }: { defaultTab?: Tab }) {
   const [tab, setTab] = useState<Tab>(defaultTab)
+  const { t } = useLanguage()
+
   return (
     <Card className="w-full max-w-sm bg-white rounded-xl shadow-xl shadow-indigo-100/60 p-8 border-0">
       <Tabs value={tab} onValueChange={(v) => setTab(v as Tab)}>
@@ -18,13 +21,13 @@ export function AuthCard({ defaultTab = 'signin' as Tab }: { defaultTab?: Tab })
             value="signin"
             className="rounded-none bg-transparent shadow-none border-b-2 border-b-gray-200 data-[state=active]:text-indigo-600 data-[state=active]:border-b-indigo-600 border-t-0 border-x-0 py-3 outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0"
           >
-            登录 / Sign in
+            {t('auth.signIn')}
           </TabsTrigger>
           <TabsTrigger
             value="signup"
             className="rounded-none bg-transparent shadow-none border-b-2 border-b-gray-200 data-[state=active]:text-indigo-600 data-[state=active]:border-b-indigo-600 border-t-0 border-x-0 py-3 outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0"
           >
-            注册 / Sign up
+            {t('auth.signUp')}
           </TabsTrigger>
         </TabsList>
         <TabsContent value="signin" className="mt-0">
@@ -37,3 +40,4 @@ export function AuthCard({ defaultTab = 'signin' as Tab }: { defaultTab?: Tab })
     </Card>
   )
 }
+

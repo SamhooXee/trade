@@ -7,11 +7,15 @@ import { isAdmin } from '@/lib/auth/roles'
 import { RedeemForm } from '@/components/dashboard/redeem-form'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Coins, History, User, Key, LogOut, Settings } from 'lucide-react'
+import { getTranslations } from '@/lib/i18n'
+import { LanguageSwitcher } from '@/components/providers/language-provider'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/')
+
+  const { t, lang } = await getTranslations()
 
   // Fetch points balance from block1_profiles
   let points = 0
@@ -43,7 +47,7 @@ export default async function DashboardPage() {
   const isUserAdmin = isAdmin(user)
 
   const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleString('zh-CN', {
+    return new Date(dateStr).toLocaleString(lang === 'en' ? 'en-US' : 'zh-CN', {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
@@ -68,25 +72,28 @@ export default async function DashboardPage() {
             <span className="text-sm font-medium text-indigo-900">{user.email}</span>
           </div>
 
+          <LanguageSwitcher />
+
           <div className="flex items-center gap-1.5 bg-amber-50 border border-amber-200/60 rounded-full py-1.5 px-4">
             <Coins className="h-4 w-4 text-amber-500" />
-            <span className="text-xs font-semibold text-amber-700">当前积分 / Points:</span>
+            <span className="text-xs font-semibold text-amber-700">{t('dashboard.currentPoints')}:</span>
             <span className="text-sm font-bold text-amber-800">{points}</span>
           </div>
 
           {isUserAdmin && (
             <Link href="/admin" className="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors flex items-center gap-1">
-              <Settings className="h-4 w-4" /> 管理控制台 / Admin
+              <Settings className="h-4 w-4" /> {t('common.adminConsole')}
             </Link>
           )}
 
           <form action={signOutAction}>
-            <Button type="submit" variant="ghost" size="sm" className="text-gray-500 hover:text-rose-600 transition-colors">
-              <LogOut className="h-4 w-4 mr-1" /> 退出 / Sign out
+            <Button type="submit" variant="ghost" size="sm" className="text-gray-500 hover:text-rose-600 transition-colors cursor-pointer">
+              <LogOut className="h-4 w-4 mr-1" /> {t('common.signOut')}
             </Button>
           </form>
         </div>
       </header>
+
 
       {/* Main Dashboard Layout */}
       <main className="flex-1 max-w-5xl w-full mx-auto p-6 grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
@@ -96,10 +103,10 @@ export default async function DashboardPage() {
             <div className="h-1.5 bg-indigo-600 w-full" />
             <CardHeader className="pb-4">
               <CardTitle className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                <Key className="h-5 w-5 text-indigo-600" /> 兑换激活码 / Redeem Key
+                <Key className="h-5 w-5 text-indigo-600" /> {t('dashboard.redeemKey')}
               </CardTitle>
               <CardDescription className="text-xs text-gray-600">
-                输入激活码(Activation Key)即可兑换对应的积分，充值到个人账户中。
+                {t('dashboard.redeemDesc')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -113,10 +120,10 @@ export default async function DashboardPage() {
           <Card className="border-0 shadow-lg shadow-indigo-100/60 bg-white/95 backdrop-blur-sm overflow-hidden">
             <CardHeader className="pb-4">
               <CardTitle className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                <History className="h-5 w-5 text-indigo-600" /> 兑换历史 / Redemption History
+                <History className="h-5 w-5 text-indigo-600" /> {t('dashboard.history')}
               </CardTitle>
               <CardDescription className="text-xs text-gray-600">
-                您在此账户下成功兑换的所有激活码历史记录。
+                {t('dashboard.historyDesc')}
               </CardDescription>
             </CardHeader>
             <CardContent className="p-0">
@@ -124,16 +131,16 @@ export default async function DashboardPage() {
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="bg-gray-50/80 border-y border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider">
-                      <th className="px-6 py-3 font-semibold">激活码 / Key Code</th>
-                      <th className="px-6 py-3 font-semibold">积分值 / Points</th>
-                      <th className="px-6 py-3 font-semibold">兑换时间 / Redeemed At</th>
+                      <th className="px-6 py-3 font-semibold">{t('dashboard.keyCode')}</th>
+                      <th className="px-6 py-3 font-semibold">{t('dashboard.pointsVal')}</th>
+                      <th className="px-6 py-3 font-semibold">{t('dashboard.redeemedAt')}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100 text-sm">
                     {!history || history.length === 0 ? (
                       <tr>
-                        <td colSpan={3} className="px-6 py-8 text-center text-gray-500 text-xs">
-                          暂无兑换记录 / No redemption history
+                        <td colSpan={3} className="px-6 py-8 text-center text-gray-500 text-xs font-medium">
+                          {t('dashboard.noHistory')}
                         </td>
                       </tr>
                     ) : (
@@ -165,3 +172,4 @@ export default async function DashboardPage() {
     </div>
   )
 }
+
