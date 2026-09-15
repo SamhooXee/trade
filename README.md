@@ -89,9 +89,44 @@ admin 角色通过 Supabase 服务端字段 `app_metadata.role` 控制。步骤:
 
 E2E(`e2e/admin.spec.ts`)需要一个预置 admin 账号。手工预置步骤同上,推荐邮箱:`admin-e2e@trade-test.com`。
 
+## Quant 模块 (Phase 0+)
+
+A 股主板量化交易 MVP。当前阶段: 数据层 + Mock 行情。
+
+### 新增环境变量
+
+| 变量 | 说明 |
+|---|---|
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase 服务角色 key,用于 cron 端点绕过 RLS。**仅服务端可用,严禁暴露** |
+| `CRON_SECRET` | Cron 端点鉴权 secret。Vercel 自动注入到 `Authorization: Bearer` 头,本地用 curl 调试时手动加 |
+| `MARKET_DATA_PROVIDER` | 数据源 provider,默认 `mock`。未来支持 `tushare` |
+
+### 数据导入
+
+首次部署后,需运行 seed 脚本导入主板股票元数据:
+
+```bash
+pnpm seed:symbols
+```
+
+随后 Vercel Cron 会每日自动入库日线与分钟线 (Mock 数据)。
+
+### 手动触发 cron (本地调试)
+
+```bash
+curl -X POST http://localhost:3000/api/cron/ingest-daily \
+  -H "Authorization: Bearer $CRON_SECRET"
+```
+
+### Mock 数据说明
+
+行情数据为模拟数据 (GBM 模型),非真实 A 股数据。生产环境务必切换到 Tushare 等真实数据源。
+
 ## 文档
 
 - 设计规范:`docs/superpowers/specs/2026-06-20-block1-auth-design.md`
 - 实施计划:`docs/superpowers/plans/2026-06-20-block1-auth.md`
 - admin 角色设计:`docs/superpowers/specs/2026-06-20-block1-admin-role-design.md`
 - admin 角色实施计划:`docs/superpowers/plans/2026-06-20-block1-admin-role.md`
+- 量化交易总设计:`docs/superpowers/specs/2026-09-15-quant-trading-design.md`
+- Phase 0 实施计划:`docs/superpowers/plans/2026-09-15-phase0-data-foundation.md`
