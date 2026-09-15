@@ -42,7 +42,7 @@ export async function redeemKeyAction(
 
 
   try {
-    const { data, error } = await supabase.rpc('block1_redeem_key', {
+    const { data, error } = await supabase.rpc('trade260915a_redeem_key', {
       key_code: parsed.data.code,
       user_id: user.id,
     })

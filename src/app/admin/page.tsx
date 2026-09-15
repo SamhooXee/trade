@@ -11,8 +11,8 @@ export default async function AdminPage() {
   if (!isAdmin(user)) return <Forbidden />
 
   const { data: dbKeys } = await supabase
-    .from('block1_keys')
-    .select('*, profile:block1_profiles(email)')
+    .from('trade260915a_keys')
+    .select('*, profile:trade260915a_profiles(email)')
     .order('created_at', { ascending: false })
 
   interface DbKey {

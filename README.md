@@ -1,4 +1,4 @@
-# Block1
+# Trade
 
 Next.js 15 + Supabase 全栈应用骨架,当前实现登录 / 注册 / 受保护欢迎页的 MVP。
 
@@ -87,7 +87,7 @@ admin 角色通过 Supabase 服务端字段 `app_metadata.role` 控制。步骤:
 
 ### E2E 测试用 admin 账号
 
-E2E(`e2e/admin.spec.ts`)需要一个预置 admin 账号。手工预置步骤同上,推荐邮箱:`admin-e2e@block1-test.com`。
+E2E(`e2e/admin.spec.ts`)需要一个预置 admin 账号。手工预置步骤同上,推荐邮箱:`admin-e2e@trade-test.com`。
 
 ## 文档
 

@@ -26,7 +26,7 @@ describe('KeyService', () => {
 
       const code = await keyService.generateUniqueKeyCode(mockSupabase)
       expect(code).toMatch(/^[A-Z2-7]{4}-[A-Z2-7]{4}-[A-Z2-7]{4}-[A-Z2-7]{4}$/)
-      expect(mockFrom).toHaveBeenCalledWith('block1_keys')
+      expect(mockFrom).toHaveBeenCalledWith('trade260915a_keys')
     })
   })
 
@@ -38,7 +38,7 @@ describe('KeyService', () => {
       const mockInsert = vi.fn().mockReturnValue({ select: mockSelect })
       
       const mockFrom = vi.fn().mockImplementation((table) => {
-        if (table === 'block1_keys') {
+        if (table === 'trade260915a_keys') {
           return {
             select: vi.fn().mockReturnValue({ eq: mockEq }),
             insert: mockInsert,

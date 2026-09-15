@@ -54,7 +54,7 @@ export class KeyService {
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       const code = this.generateKeyCode()
       const { data, error } = await supabase
-        .from('block1_keys')
+        .from('trade260915a_keys')
         .select('id')
         .eq('code', code)
         .maybeSingle()
@@ -90,7 +90,7 @@ export class KeyService {
     }
 
     const { data, error } = await supabase
-      .from('block1_keys')
+      .from('trade260915a_keys')
       .insert(keysToInsert)
       .select()
 
@@ -106,7 +106,7 @@ export class KeyService {
    */
   async deleteKey(supabase: SupabaseClient, id: string): Promise<boolean> {
     const { error } = await supabase
-      .from('block1_keys')
+      .from('trade260915a_keys')
       .delete()
       .eq('id', id)
 

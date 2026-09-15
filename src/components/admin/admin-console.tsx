@@ -135,7 +135,7 @@ export function AdminConsole({ email, initialKeys }: Props) {
             <KeyRound className="h-5 w-5" />
           </div>
           <div>
-            <span className="font-bold text-gray-900 tracking-tight text-lg">Block1</span>
+            <span className="font-bold text-gray-900 tracking-tight text-lg">Trade</span>
             <span className="ml-1.5 px-2 py-0.5 text-[10px] font-semibold bg-indigo-100 text-indigo-700 rounded-full uppercase tracking-wider">Admin</span>
           </div>
         </div>

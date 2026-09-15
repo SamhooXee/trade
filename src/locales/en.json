@@ -1,6 +1,6 @@
 {
   "common": {
-    "title": "Block1",
+    "title": "Trade",
     "points": "Points",
     "signOut": "Sign out",
     "back": "Back",
@@ -20,8 +20,8 @@
     "toSignIn": "Sign in",
     "forbidden": "403 - Forbidden",
     "adminOnly": "This page is restricted to administrators.",
-    "metaTitle": "Block1 — Sign in / Sign up",
-    "metaDesc": "Sign in or sign up for a Block1 account"
+    "metaTitle": "Trade — Sign in / Sign up",
+    "metaDesc": "Sign in or sign up for a Trade account"
   },
   "dashboard": {
     "currentPoints": "Points",

@@ -1,6 +1,6 @@
 {
   "common": {
-    "title": "Block1",
+    "title": "Trade",
     "points": "积分",
     "signOut": "退出",
     "back": "返回",
@@ -20,8 +20,8 @@
     "toSignIn": "去登录",
     "forbidden": "403 - 无权限",
     "adminOnly": "此页面仅限管理员访问",
-    "metaTitle": "Block1 — 登录/注册",
-    "metaDesc": "登录或注册 Block1 账户"
+    "metaTitle": "Trade — 登录/注册",
+    "metaDesc": "登录或注册 Trade 账户"
   },
   "dashboard": {
     "currentPoints": "当前积分",

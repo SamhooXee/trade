@@ -13,7 +13,7 @@ export default async function HomePage() {
       <div className="absolute top-6 right-6 z-50">
         <LanguageSwitcher />
       </div>
-      <h1 className="text-3xl font-semibold mb-8 text-gray-900 tracking-tight">Block1</h1>
+      <h1 className="text-3xl font-semibold mb-8 text-gray-900 tracking-tight">Trade</h1>
       <AuthCard />
     </main>
   )

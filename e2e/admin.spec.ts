@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 
 /**
  * 手工前置:
- * 1. 注册一个 admin 账号(走 / 的 sign-up 流程),例如 admin-e2e@block1-test.com
+ * 1. 注册一个 admin 账号(走 / 的 sign-up 流程),例如 admin-e2e@trade-test.com
  * 2. 退出登录
  * 3. Supabase Dashboard → Authentication → Users → 该用户
  *    → Raw App Meta Data,写入 {"role": "admin"}

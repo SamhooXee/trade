@@ -17,10 +17,10 @@ export default async function DashboardPage() {
 
   const { t, lang } = await getTranslations()
 
-  // Fetch points balance from block1_profiles
+  // Fetch points balance from trade260915a_profiles
   let points = 0
   const { data: profile, error: profileError } = await supabase
-    .from('block1_profiles')
+    .from('trade260915a_profiles')
     .select('points')
     .eq('id', user.id)
     .maybeSingle()
@@ -30,7 +30,7 @@ export default async function DashboardPage() {
   } else if (!profileError) {
     // Upsert profile row if it doesn't exist
     const { data: newProfile } = await supabase
-      .from('block1_profiles')
+      .from('trade260915a_profiles')
       .insert({ id: user.id, email: user.email, points: 0 })
       .select('points')
       .maybeSingle()
@@ -39,7 +39,7 @@ export default async function DashboardPage() {
 
   // Fetch redemption history
   const { data: history } = await supabase
-    .from('block1_keys')
+    .from('trade260915a_keys')
     .select('*')
     .eq('user_id', user.id)
     .order('redeemed_at', { ascending: false })
@@ -64,7 +64,7 @@ export default async function DashboardPage() {
           <div className="p-2 bg-indigo-600 rounded-lg text-white">
             <Coins className="h-5 w-5" />
           </div>
-          <span className="font-bold text-gray-900 tracking-tight text-lg">Block1</span>
+          <span className="font-bold text-gray-900 tracking-tight text-lg">Trade</span>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 bg-indigo-50/50 border border-indigo-100/40 rounded-full py-1.5 px-4">
