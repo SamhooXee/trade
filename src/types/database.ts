@@ -118,25 +118,25 @@ export interface Database {
           id: string
           user_id: string
           name: string
-          spec: unknown
+          spec: Record<string, unknown>
           status: 'draft' | 'active' | 'paused' | 'archived'
           created_at: string
           updated_at: string
         }
         Insert: {
-          id?: string
+          id: string
           user_id: string
           name: string
-          spec: unknown
-          status?: 'draft' | 'active' | 'paused' | 'archived'
-          created_at?: string
-          updated_at?: string
+          spec: Record<string, unknown>
+          status: 'draft' | 'active' | 'paused' | 'archived'
+          created_at: string
+          updated_at: string
         }
         Update: Partial<{
           id: string
           user_id: string
           name: string
-          spec: unknown
+          spec: Record<string, unknown>
           status: 'draft' | 'active' | 'paused' | 'archived'
           created_at: string
           updated_at: string
