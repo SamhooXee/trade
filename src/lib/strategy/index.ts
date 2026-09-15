@@ -8,6 +8,7 @@ export type {
   Combinator,
   StrategyStatus,
 } from './types'
+export type { FactorId } from '@/lib/factors'
 export { COMPARATORS, COMBINATORS, STRATEGY_STATUSES } from './types'
 export { composeStrategy, emptySpec, defaultHolding, parseStoredSpec } from './compose'
 export { evaluateConditions } from './evaluate'
