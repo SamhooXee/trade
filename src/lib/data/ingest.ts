@@ -47,7 +47,7 @@ export async function ingestMinuteBars(bars: MinuteBar[]): Promise<IngestResult>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { error } = await (supabase as any)
     .from('trade260915a_quant_minute_bars')
-    .upsert(rows, { onConflict: 'symbol_code,trade_time' })
+    .upsert(rows, { onConflict: 'symbol_code,trade_date,trade_time' })
   if (error) throw new Error(`ingestMinuteBars failed: ${error.message}`)
   return { upserted: bars.length }
 }

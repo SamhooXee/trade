@@ -44,7 +44,7 @@ CREATE TABLE trade260915a_quant_minute_bars (
   close       NUMERIC(12, 4) NOT NULL,
   volume      BIGINT NOT NULL,
   amount      BIGINT NOT NULL,
-  PRIMARY KEY (symbol_code, trade_time)
+  PRIMARY KEY (symbol_code, trade_date, trade_time)
 ) PARTITION BY RANGE (trade_date);
 
 CREATE TABLE trade260915a_quant_minute_bars_2025 PARTITION OF trade260915a_quant_minute_bars
