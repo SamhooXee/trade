@@ -93,5 +93,80 @@
     "激活码已被使用 / Key has already been redeemed": "激活码已被使用",
     "激活码已过期 / Key has expired": "激活码已过期",
     "兑换成功 / Successfully redeemed": "兑换成功"
+  },
+  "quant": {
+    "strategy": {
+      "listTitle": "我的策略",
+      "newButton": "新建策略",
+      "empty": "还没有策略,创建第一个",
+      "fields": {
+        "name": "策略名称",
+        "namePlaceholder": "为你的策略起个名字",
+        "combinator": "条件组合",
+        "and": "全部满足(AND)",
+        "or": "任一满足(OR)",
+        "entryTitle": "入场条件",
+        "exitTitle": "出场条件",
+        "addCondition": "添加条件",
+        "removeCondition": "删除条件",
+        "holdingTitle": "持仓与风控",
+        "maxPositions": "最多持仓数",
+        "positionSizePct": "单仓位占比 (%)",
+        "maxDrawdownPct": "最大回撤止损 (%)",
+        "saveDraft": "保存草稿",
+        "saveAndEnable": "保存并启用",
+        "cancel": "取消",
+        "noEntry": "暂无入场条件,提交后无效",
+        "noExit": "暂无出场条件,策略将持有直到手动卖出(本期不适用)"
+      },
+      "actions": {
+        "edit": "编辑",
+        "backtest": "回测",
+        "start": "启动",
+        "pause": "暂停",
+        "resume": "恢复",
+        "archive": "归档"
+      },
+      "status": {
+        "draft": "草稿",
+        "active": "运行中",
+        "paused": "已暂停",
+        "archived": "已归档"
+      },
+      "detailTitle": "策略详情",
+      "createdAt": "创建于",
+      "updatedAt": "更新于",
+      "summaryEmpty": "无入场条件"
+    },
+    "factor": {
+      "factor": "因子",
+      "selectFactor": "选择因子",
+      "comparator": "比较符",
+      "threshold": "阈值",
+      "RETURN_5D": "5日收益率",
+      "RETURN_20D": "20日收益率",
+      "RETURN_60D": "60日收益率",
+      "MA_CROSS": "均线差值",
+      "VOLUME_RATIO": "量比",
+      "PE_TTM": "PE-TTM",
+      "params": {
+        "fastPeriod": "快线周期",
+        "slowPeriod": "慢线周期",
+        "period": "回看天数"
+      },
+      "comparators": {
+        ">": "大于 (>)",
+        "<": "小于 (<)",
+        ">=": "大于等于 (≥)",
+        "<=": "小于等于 (≤)",
+        "cross_up": "上穿阈值",
+        "cross_down": "下穿阈值"
+      }
+    },
+    "errors": {
+      "name_required": "策略名称不能为空",
+      "name_too_long": "策略名称不能超过 100 字符",
+      "invalid_spec": "策略配置无效"
+    }
   }
 }

@@ -93,5 +93,80 @@
     "激活码已被使用 / Key has already been redeemed": "Key has already been redeemed",
     "激活码已过期 / Key has expired": "Key has expired",
     "兑换成功 / Successfully redeemed": "Successfully redeemed"
+  },
+  "quant": {
+    "strategy": {
+      "listTitle": "My Strategies",
+      "newButton": "New Strategy",
+      "empty": "No strategies yet. Create your first one.",
+      "fields": {
+        "name": "Strategy Name",
+        "namePlaceholder": "Name your strategy",
+        "combinator": "Combinator",
+        "and": "All of (AND)",
+        "or": "Any of (OR)",
+        "entryTitle": "Entry Conditions",
+        "exitTitle": "Exit Conditions",
+        "addCondition": "Add Condition",
+        "removeCondition": "Remove",
+        "holdingTitle": "Holding & Risk",
+        "maxPositions": "Max Positions",
+        "positionSizePct": "Position Size (%)",
+        "maxDrawdownPct": "Max Drawdown Stop (%)",
+        "saveDraft": "Save Draft",
+        "saveAndEnable": "Save & Enable",
+        "cancel": "Cancel",
+        "noEntry": "No entry conditions. Strategy will not enter any position.",
+        "noExit": "No exit conditions. Will hold indefinitely (not applicable in MVP)."
+      },
+      "actions": {
+        "edit": "Edit",
+        "backtest": "Backtest",
+        "start": "Start",
+        "pause": "Pause",
+        "resume": "Resume",
+        "archive": "Archive"
+      },
+      "status": {
+        "draft": "Draft",
+        "active": "Active",
+        "paused": "Paused",
+        "archived": "Archived"
+      },
+      "detailTitle": "Strategy Detail",
+      "createdAt": "Created at",
+      "updatedAt": "Updated at",
+      "summaryEmpty": "No entry conditions"
+    },
+    "factor": {
+      "factor": "Factor",
+      "selectFactor": "Select factor",
+      "comparator": "Comparator",
+      "threshold": "Threshold",
+      "RETURN_5D": "5-Day Return",
+      "RETURN_20D": "20-Day Return",
+      "RETURN_60D": "60-Day Return",
+      "MA_CROSS": "MA Difference",
+      "VOLUME_RATIO": "Volume Ratio",
+      "PE_TTM": "PE-TTM",
+      "params": {
+        "fastPeriod": "Fast Period",
+        "slowPeriod": "Slow Period",
+        "period": "Lookback Days"
+      },
+      "comparators": {
+        ">": "Greater than (>)",
+        "<": "Less than (<)",
+        ">=": "Greater or equal (≥)",
+        "<=": "Less or equal (≤)",
+        "cross_up": "Cross up",
+        "cross_down": "Cross down"
+      }
+    },
+    "errors": {
+      "name_required": "Strategy name is required",
+      "name_too_long": "Strategy name must be ≤ 100 characters",
+      "invalid_spec": "Invalid strategy configuration"
+    }
   }
 }

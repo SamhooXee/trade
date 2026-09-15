@@ -33,14 +33,14 @@ export async function createStrategyAction(
   const specRaw = String(formData.get('spec') ?? '')
   const mode = String(formData.get('mode') ?? 'draft')
 
-  if (!name) return { fieldErrors: { name: ['errors.name_required'] } }
-  if (name.length > 100) return { fieldErrors: { name: ['errors.name_too_long'] } }
+  if (!name) return { fieldErrors: { name: ['quant.errors.name_required'] } }
+  if (name.length > 100) return { fieldErrors: { name: ['quant.errors.name_too_long'] } }
 
   let spec: StrategySpec
   try {
     spec = composeStrategy(JSON.parse(specRaw))
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'errors.invalid_spec'
+    const message = err instanceof Error ? err.message : 'quant.errors.invalid_spec'
     return { fieldErrors: { spec: [message] } }
   }
 
@@ -75,14 +75,14 @@ export async function updateStrategyAction(
   const name = String(formData.get('name') ?? '').trim()
   const specRaw = String(formData.get('spec') ?? '')
 
-  if (!name) return { fieldErrors: { name: ['errors.name_required'] } }
-  if (name.length > 100) return { fieldErrors: { name: ['errors.name_too_long'] } }
+  if (!name) return { fieldErrors: { name: ['quant.errors.name_required'] } }
+  if (name.length > 100) return { fieldErrors: { name: ['quant.errors.name_too_long'] } }
 
   let spec: StrategySpec
   try {
     spec = composeStrategy(JSON.parse(specRaw))
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'errors.invalid_spec'
+    const message = err instanceof Error ? err.message : 'quant.errors.invalid_spec'
     return { fieldErrors: { spec: [message] } }
   }
 
