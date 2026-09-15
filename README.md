@@ -130,3 +130,17 @@ curl -X POST http://localhost:3000/api/cron/ingest-daily \
 - admin 角色实施计划:`docs/superpowers/plans/2026-06-20-block1-admin-role.md`
 - 量化交易总设计:`docs/superpowers/specs/2026-09-15-quant-trading-design.md`
 - Phase 0 实施计划:`docs/superpowers/plans/2026-09-15-phase0-data-foundation.md`
+- Phase 1 实施计划:`docs/superpowers/plans/2026-09-15-phase1-factors-strategy.md`
+
+### Phase 1 — 因子 + 策略
+
+用户可创建并保存策略。包含:
+
+- 6 个内置因子 (5D/20D/60D 动量、均线差值、量比、PE-TTM)
+- `StrategySpec` zod schema (entry/exit conditions + holding config)
+- `evaluateConditions` 纯函数求值器
+- Server Actions: `createStrategyAction` / `updateStrategyAction` / `setStrategyStatusAction`
+- 页面: `/strategy` 列表, `/strategy/new` 新建, `/strategy/[id]` 详情/编辑/启停
+- i18n: `quant.strategy.*` / `quant.factor.*` (zh + en)
+
+策略表 `trade260915a_strategies` 含 RLS (按 user_id 隔离)。
