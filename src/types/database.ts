@@ -113,6 +113,35 @@ export interface Database {
           last_synced_at: string
         }>
       }
+      trade260915a_strategies: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          spec: unknown
+          status: 'draft' | 'active' | 'paused' | 'archived'
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          name: string
+          spec: unknown
+          status?: 'draft' | 'active' | 'paused' | 'archived'
+          created_at?: string
+          updated_at?: string
+        }
+        Update: Partial<{
+          id: string
+          user_id: string
+          name: string
+          spec: unknown
+          status: 'draft' | 'active' | 'paused' | 'archived'
+          created_at: string
+          updated_at: string
+        }>
+      }
     }
     Views: Record<string, never>
     Functions: Record<string, never>
