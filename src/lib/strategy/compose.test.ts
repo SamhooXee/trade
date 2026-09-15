@@ -34,6 +34,7 @@ describe('composeStrategy', () => {
         entry: {
           combinator: 'AND',
           conditions: [
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             { factor: 'UNKNOWN' as any, params: {}, comparator: '>', threshold: 0 },
           ],
         },

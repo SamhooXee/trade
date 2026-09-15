@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import type { DailyBar } from '@/lib/data'
-import type { Factor, FactorContext, FactorParam, FactorId } from './types'
+import type { Factor } from './types'
 import { FACTOR_IDS } from './types'
 
 describe('Factor interface', () => {

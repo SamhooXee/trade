@@ -7,7 +7,8 @@ import { composeStrategy } from './compose'
 import { type StrategySpec, type StrategyStatus } from './types'
 
 // Server Actions 通过 e2e 覆盖。supabase 客户端类型化插入在 .from() 上与本项目已知的
-// 类型推导行为不兼容;这里用 `as any` 绕过,保留运行时行为。
+// 类型推导行为不兼容;这里用 `as never` 绕过,保留运行时行为。
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyClient = { from: (t: string) => any; auth: { getUser: () => Promise<any> } }
 
 export type StrategyFormState = {

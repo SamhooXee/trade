@@ -31,7 +31,8 @@ function matchOne(
   c: { factor: string; params: Record<string, number>; comparator: Comparator; threshold: number },
   bars: DailyBar[],
 ): boolean {
-  const factor = getFactor(c.factor as any)
+  // c.factor 来自 strategy spec JSON,运行时由 zod 限制为 FactorId;此处强制为合法 id。
+  const factor = getFactor(c.factor as Parameters<typeof getFactor>[0])
   const todayVal = factor.compute(bars, c.params)
   if (todayVal === null) return false
 

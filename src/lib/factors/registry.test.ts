@@ -15,6 +15,7 @@ describe('getFactor', () => {
   })
 
   it('throws for unknown id', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect(() => getFactor('UNKNOWN' as any)).toThrow(/Unknown factor/)
   })
 })

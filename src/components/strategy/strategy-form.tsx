@@ -312,6 +312,7 @@ export function StrategyForm({
 
       {status && (
         <p className="text-sm text-gray-500">
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {t(`quant.strategy.status.${status}` as any)}
         </p>
       )}
