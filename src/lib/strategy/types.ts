@@ -34,7 +34,11 @@ export const holdingSchema = z.object({
 export const strategySpecSchema = z.object({
   entry: conditionsBlockSchema,
   exit: conditionsBlockSchema,
-  holding: holdingSchema,
+  holding: holdingSchema.default({
+    maxPositions: 5,
+    positionSizePct: 20,
+    maxDrawdownPct: 20,
+  }),
 })
 
 export type Condition = z.infer<typeof conditionSchema>
