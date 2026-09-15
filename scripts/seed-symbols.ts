@@ -25,7 +25,8 @@ async function main() {
   }))
 
   console.log('Upserting to Supabase...')
-  const { error } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any)
     .from('trade260915a_quant_symbols')
     .upsert(rows, { onConflict: 'code' })
   if (error) throw new Error(error.message)
