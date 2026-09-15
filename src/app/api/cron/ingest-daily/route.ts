@@ -18,9 +18,10 @@ export async function POST(request: Request) {
   }
 
   const provider = getProvider()
-  const supabase = getServiceRoleClient() as any
+  const supabase = getServiceRoleClient()
 
-  const { data: symbols, error: symErr } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: symbols, error: symErr } = await (supabase as any)
     .from('trade260915a_quant_symbols')
     .select('code')
   if (symErr) {

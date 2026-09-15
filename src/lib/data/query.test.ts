@@ -7,10 +7,13 @@ const skipIfNoDb = process.env.SUPABASE_URL ? describe : describe.skip
 
 skipIfNoDb('query', () => {
   beforeEach(async () => {
-    const supabase = getServiceRoleClient() as any
-    await supabase.from('trade260915a_quant_daily_bars').delete().neq('symbol_code', '__none__')
-    await supabase.from('trade260915a_quant_minute_bars').delete().neq('symbol_code', '__none__')
-    await supabase.from('trade260915a_quant_symbols').delete().neq('code', '__none__')
+    const supabase = getServiceRoleClient()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase as any).from('trade260915a_quant_daily_bars').delete().neq('symbol_code', '__none__')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase as any).from('trade260915a_quant_minute_bars').delete().neq('symbol_code', '__none__')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase as any).from('trade260915a_quant_symbols').delete().neq('code', '__none__')
     await ingestDailyBars([
       { symbolCode: '600000', tradeDate: '2026-09-10', open: 10, high: 11, low: 9.5, close: 10.5, volume: 1000, amount: 10500 },
       { symbolCode: '600000', tradeDate: '2026-09-11', open: 10.5, high: 11.2, low: 10.3, close: 10.8, volume: 1200, amount: 12960 },
@@ -22,10 +25,13 @@ skipIfNoDb('query', () => {
   })
 
   afterEach(async () => {
-    const supabase = getServiceRoleClient() as any
-    await supabase.from('trade260915a_quant_daily_bars').delete().neq('symbol_code', '__none__')
-    await supabase.from('trade260915a_quant_minute_bars').delete().neq('symbol_code', '__none__')
-    await supabase.from('trade260915a_quant_symbols').delete().neq('code', '__none__')
+    const supabase = getServiceRoleClient()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase as any).from('trade260915a_quant_daily_bars').delete().neq('symbol_code', '__none__')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase as any).from('trade260915a_quant_minute_bars').delete().neq('symbol_code', '__none__')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase as any).from('trade260915a_quant_symbols').delete().neq('code', '__none__')
   })
 
   it('getDailyBars returns bars for range', async () => {

@@ -100,7 +100,7 @@ const SAMPLE_NAMES = [
 
 export class MockDataProvider implements MarketDataProvider {
   async listSymbols(): Promise<Symbol[]> {
-    return MAINBOARD_CODES.map((code, i) => {
+    return MAINBOARD_CODES.map((code) => {
       const market = code.startsWith('6') ? 'SH' : 'SZ'
       const rand = seededRandom('name:' + code)
       const name = SAMPLE_NAMES[Math.floor(rand() * SAMPLE_NAMES.length)]

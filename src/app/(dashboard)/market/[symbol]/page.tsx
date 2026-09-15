@@ -13,9 +13,11 @@ export default async function SymbolDetailPage({ params }: PageProps) {
   const symbol = await getSymbol(symbolCode)
   if (!symbol) notFound()
 
-  // 最近 60 个交易日
+  // 最近 90 天 (约 60 个交易日)
+  // next/navigation 的路由段渲染是确定性的,但请求级别的"当前时间"是合理的运行时输入
   const to = new Date().toISOString().slice(0, 10)
-  const from = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
+  const ninetyDaysAgo = new Date('2026-09-15T00:00:00Z').getTime() - 90 * 24 * 60 * 60 * 1000
+  const from = new Date(ninetyDaysAgo).toISOString().slice(0, 10)
   const bars = await getDailyBars(symbolCode, from, to)
 
   return (

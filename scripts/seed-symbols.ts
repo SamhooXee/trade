@@ -9,7 +9,7 @@ import { getServiceRoleClient } from '../src/lib/supabase/service-role'
 
 async function main() {
   const provider = getProvider()
-  const supabase = getServiceRoleClient() as any
+  const supabase = getServiceRoleClient()
 
   console.log('Fetching symbols from MockDataProvider...')
   const symbols = await provider.listSymbols()

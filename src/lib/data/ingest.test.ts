@@ -7,17 +7,22 @@ const skipIfNoDb = process.env.SUPABASE_URL ? describe : describe.skip
 
 skipIfNoDb('ingest', () => {
   beforeEach(async () => {
-    const supabase = getServiceRoleClient() as any
-    await supabase.from('trade260915a_quant_daily_bars').delete().neq('symbol_code', '__none__')
-    await supabase.from('trade260915a_quant_minute_bars').delete().neq('symbol_code', '__none__')
-    await supabase.from('trade260915a_quant_ingest_state').update({ last_synced_at: '1970-01-01T00:00:00Z' })
+    const supabase = getServiceRoleClient()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase as any).from('trade260915a_quant_daily_bars').delete().neq('symbol_code', '__none__')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase as any).from('trade260915a_quant_minute_bars').delete().neq('symbol_code', '__none__')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase as any).from('trade260915a_quant_ingest_state').update({ last_synced_at: '1970-01-01T00:00:00Z' })
       .in('data_type', ['daily', 'minute'])
   })
 
   afterEach(async () => {
-    const supabase = getServiceRoleClient() as any
-    await supabase.from('trade260915a_quant_daily_bars').delete().neq('symbol_code', '__none__')
-    await supabase.from('trade260915a_quant_minute_bars').delete().neq('symbol_code', '__none__')
+    const supabase = getServiceRoleClient()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase as any).from('trade260915a_quant_daily_bars').delete().neq('symbol_code', '__none__')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase as any).from('trade260915a_quant_minute_bars').delete().neq('symbol_code', '__none__')
   })
 
   it('ingestDailyBars inserts new bars', async () => {
@@ -35,8 +40,9 @@ skipIfNoDb('ingest', () => {
     await ingestDailyBars([
       { symbolCode: '600000', tradeDate: '2026-09-15', open: 10, high: 11, low: 9.5, close: 10.6, volume: 1000, amount: 10600 },
     ])
-    const supabase = getServiceRoleClient() as any
-    const { data } = await supabase.from('trade260915a_quant_daily_bars')
+    const supabase = getServiceRoleClient()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data } = await (supabase as any).from('trade260915a_quant_daily_bars')
       .select('close, amount')
       .eq('symbol_code', '600000')
       .eq('trade_date', '2026-09-15')
