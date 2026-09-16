@@ -255,7 +255,11 @@
       "positionsTitle": "持仓明细",
       "tradesLink": "查看成交明细 →",
       "noPositions": "暂无持仓",
-      "equityCurve": "权益曲线"
+      "equityCurve": "权益曲线",
+      "peakEquity": "历史最高权益 {value}",
+      "drawdown": "当前回撤 {pct}%",
+      "stopReason": "停止原因:{reason}",
+      "statusStopped": "已停止"
     },
     "order": {
       "title": "挂单",
@@ -286,6 +290,35 @@
       "amount": "成交金额",
       "fee": "费用",
       "noFills": "暂无成交"
+    },
+    "risk": {
+      "title": "风控",
+      "evaluating": "风控评估中...",
+      "stoppedBy": "策略已被风控停止:{reason}",
+      "peakEquity": "历史最高权益",
+      "currentDrawdown": "当前回撤",
+      "drawdownLimit": "回撤止损线",
+      "decisionLog": "风控决策日志",
+      "rule": {
+        "INSUFFICIENT_BUYING_POWER": "可用资金不足",
+        "INSUFFICIENT_SELLABLE_SHARES": "可卖股数不足(T+1 解禁未到)",
+        "MAX_POSITION_PCT": "单仓位超限",
+        "MAX_POSITIONS": "持仓数超限",
+        "MAX_TOTAL_EXPOSURE": "总仓位超限",
+        "MAX_DRAWDOWN_STOP": "回撤止损触发"
+      },
+      "action": {
+        "allow": "通过",
+        "modify": "调整",
+        "reject": "拒绝",
+        "stop": "停止"
+      }
+    },
+    "cron": {
+      "error": {
+        "title": "定时任务失败",
+        "retrying": "Vercel 将自动重试"
+      }
     }
   }
 }

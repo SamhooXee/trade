@@ -255,7 +255,11 @@
       "positionsTitle": "Positions",
       "tradesLink": "View trades →",
       "noPositions": "No positions",
-      "equityCurve": "Equity Curve"
+      "equityCurve": "Equity Curve",
+      "peakEquity": "Peak equity {value}",
+      "drawdown": "Current drawdown {pct}%",
+      "stopReason": "Stop reason: {reason}",
+      "statusStopped": "Stopped"
     },
     "order": {
       "title": "Orders",
@@ -286,6 +290,35 @@
       "amount": "Amount",
       "fee": "Fee",
       "noFills": "No trades yet"
+    },
+    "risk": {
+      "title": "Risk",
+      "evaluating": "Evaluating risk...",
+      "stoppedBy": "Strategy stopped by risk: {reason}",
+      "peakEquity": "Peak equity",
+      "currentDrawdown": "Current drawdown",
+      "drawdownLimit": "Drawdown limit",
+      "decisionLog": "Risk decision log",
+      "rule": {
+        "INSUFFICIENT_BUYING_POWER": "Insufficient buying power",
+        "INSUFFICIENT_SELLABLE_SHARES": "Insufficient sellable shares (T+1 lock)",
+        "MAX_POSITION_PCT": "Single position exceeds limit",
+        "MAX_POSITIONS": "Number of positions exceeds limit",
+        "MAX_TOTAL_EXPOSURE": "Total exposure exceeds limit",
+        "MAX_DRAWDOWN_STOP": "Drawdown stop triggered"
+      },
+      "action": {
+        "allow": "Allow",
+        "modify": "Modify",
+        "reject": "Reject",
+        "stop": "Stop"
+      }
+    },
+    "cron": {
+      "error": {
+        "title": "Cron job failed",
+        "retrying": "Vercel will auto-retry"
+      }
     }
   }
 }
