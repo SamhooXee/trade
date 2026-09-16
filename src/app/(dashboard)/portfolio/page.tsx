@@ -6,9 +6,16 @@ import { getProvider } from '@/lib/data'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { PortfolioSummary } from '@/components/portfolio/portfolio-summary'
 import { PositionsTable } from '@/components/portfolio/positions-table'
+import { RiskSummary } from '@/components/portfolio/risk-summary'
 import { EquityCurveChart } from '@/components/backtest/equity-curve-chart'
 import { LanguageProvider } from '@/components/providers/language-provider'
 import { getLanguage } from '@/lib/i18n'
+import {
+  computeEquityFromPortfolio,
+  computePeakEquity,
+  listSnapshotsByPortfolio,
+} from '@/lib/risk'
+import { getStrategy } from '@/lib/strategy/query'
 
 export const dynamic = 'force-dynamic'
 
@@ -66,6 +73,30 @@ export default async function PortfolioPage() {
   // 构造 equity curve(简化为单点;Phase 4 用 snapshot 表)
   const equityCurve = [{ date: today, equity: totalAssets }]
 
+  // 风控数据:peak equity / drawdown / drawdown limit
+  const lastCloseBySymbol = new Map<string, number>()
+  for (const pm of positionsWithMarket) {
+    lastCloseBySymbol.set(pm.symbolCode, pm.marketPrice)
+  }
+  const equityForRisk = computeEquityFromPortfolio({
+    cash: portfolio.cash,
+    positions: positions.map((p) => ({
+      symbolCode: p.symbolCode,
+      shares: p.shares,
+    })),
+    lastCloseBySymbol,
+  })
+  const snapshots = await listSnapshotsByPortfolio(portfolio.id)
+  const peakEquity = computePeakEquity({
+    portfolio,
+    currentEquity: equityForRisk,
+    snapshots,
+  })
+  const drawdownPct =
+    peakEquity > 0 ? ((equityForRisk - peakEquity) / peakEquity) * 100 : 0
+  const strategy = await getStrategy(portfolio.strategyId)
+  const drawdownLimit = strategy?.spec.holding.maxDrawdownPct ?? 20
+
   return (
     <LanguageProvider initialLang={lang}>
       <div className="space-y-6">
@@ -86,6 +117,15 @@ export default async function PortfolioPage() {
           floatingPnl={totalPnl}
           floatingPnlPct={totalPnlPct}
           status={portfolio.status}
+        />
+
+        <RiskSummary
+          peakEquity={peakEquity}
+          currentEquity={equityForRisk}
+          drawdownPct={Math.abs(drawdownPct)}
+          drawdownLimit={drawdownLimit}
+          status={portfolio.status}
+          stopReason={portfolio.stopReason}
         />
 
         <Card>
