@@ -5,7 +5,6 @@ import type {
   RebalancePlan,
   RebalanceIntent,
   Portfolio,
-  Position,
   StrategySpec,
 } from '@/lib/trading'
 
@@ -21,19 +20,6 @@ function mkPortfolio(overrides: Partial<Portfolio> = {}): Portfolio {
     startedAt: '2026-09-01T00:00:00Z',
     stoppedAt: null,
     ...overrides,
-  }
-}
-
-function mkPos(symbol: string, shares: number, available = shares): Position {
-  return {
-    id: `pos-${symbol}`,
-    userId: 'u1',
-    portfolioId: 'p1',
-    symbolCode: symbol,
-    shares,
-    availableShares: available,
-    costPrice: 10,
-    updatedAt: '2026-09-15T00:00:00Z',
   }
 }
 
