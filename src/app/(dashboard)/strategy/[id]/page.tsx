@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { getStrategy } from '@/lib/strategy/query'
 import { StrategyForm } from '@/components/strategy/strategy-form'
 import { StrategyActions } from './strategy-actions'
+import { RunBacktestForm } from '@/components/backtest/run-backtest-form'
 import { getTranslations } from '@/lib/i18n'
 
 interface PageProps {
@@ -39,6 +40,10 @@ export default async function StrategyDetailPage({ params }: PageProps) {
           status={strategy.status}
         />
       </div>
+
+      <section className="mt-6">
+        <RunBacktestForm strategyId={strategy.id} />
+      </section>
     </div>
   )
 }
