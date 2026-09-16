@@ -125,4 +125,31 @@ describe('matchFill — SELL', () => {
     const r = matchFill(req)
     expect(r.status).toBe('rejected')
   })
+
+  it('caps shares to available when target exceeds', () => {
+    // availableShares 1500,target = 200 股 × 10 = 20000 → shares 2000 (超 1500) → 调整为 1500
+    const req: FillRequest = {
+      intent: { symbolCode: '600000', side: 'SELL', targetAmount: 20000 },
+      nextBar: mkBar('2026-09-16', 10, 10),
+      availableShares: 1500,
+    }
+    const r = matchFill(req)
+    expect(r.status).toBe('filled')
+    expect(r.trade?.shares).toBe(1500)
+    expect(r.trade?.amount).toBeCloseTo(15000, 2)
+  })
+})
+
+describe('matchFill — BUY insufficient cash', () => {
+  it('rejects when shares × open > available cash', () => {
+    // 1000 股 × 10 元 = 10000,但 cash = 5000
+    const req: FillRequest = {
+      intent: { symbolCode: '600000', side: 'BUY', targetAmount: 10000 },
+      nextBar: mkBar('2026-09-16', 10, 10),
+      availableCash: 5000,
+    }
+    const r = matchFill(req)
+    expect(r.status).toBe('rejected')
+    expect(r.reason).toMatch(/cash/i)
+  })
 })
