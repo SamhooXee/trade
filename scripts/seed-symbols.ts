@@ -10,7 +10,7 @@
 import { getProvider } from '../src/lib/data'
 import { getServiceRoleClient } from '../src/lib/supabase/service-role'
 
-const SEED_LIMIT = 100
+const SEED_LIMIT = 10
 
 async function main() {
   const provider = getProvider()

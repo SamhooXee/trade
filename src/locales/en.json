@@ -320,5 +320,15 @@
         "retrying": "Vercel will auto-retry"
       }
     }
+  },
+  "market": {
+    "period": {
+      "label": "Period",
+      "1m": "1M",
+      "3m": "3M",
+      "6m": "6M",
+      "1y": "1Y",
+      "all": "ALL"
+    }
   }
 }

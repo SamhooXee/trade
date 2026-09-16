@@ -2,31 +2,38 @@ import { notFound } from 'next/navigation'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { getDailyBars, getSymbol } from '@/lib/data/query'
 import { KlineChart } from '@/components/market/kline-chart'
+import { PeriodSelector } from '@/components/market/period-selector'
+import { parsePeriod, periodStartDate } from '@/lib/data/period'
 
 interface PageProps {
   params: Promise<{ symbol: string }>
+  searchParams: Promise<{ period?: string }>
 }
 
-export default async function SymbolDetailPage({ params }: PageProps) {
-  const { symbol: symbolCode } = await params
+export default async function SymbolDetailPage({ params, searchParams }: PageProps) {
+  const [{ symbol: symbolCode }, { period: periodRaw }] = await Promise.all([
+    params,
+    searchParams,
+  ])
 
   const symbol = await getSymbol(symbolCode)
   if (!symbol) notFound()
 
-  // 最近 90 天 (约 60 个交易日)
-  // next/navigation 的路由段渲染是确定性的,但请求级别的"当前时间"是合理的运行时输入
+  const period = parsePeriod(periodRaw)
   const to = new Date().toISOString().slice(0, 10)
-  const ninetyDaysAgo = new Date('2026-09-15T00:00:00Z').getTime() - 90 * 24 * 60 * 60 * 1000
-  const from = new Date(ninetyDaysAgo).toISOString().slice(0, 10)
+  const from = periodStartDate(period, new Date())
   const bars = await getDailyBars(symbolCode, from, to)
 
   return (
     <div className="max-w-7xl mx-auto">
-      <div className="mb-4">
-        <h1 className="text-2xl font-semibold text-gray-900">
-          {symbol.name} ({symbol.code})
-        </h1>
-        <p className="text-sm text-gray-600">{symbol.market} 主板</p>
+      <div className="mb-4 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold text-gray-900">
+            {symbol.name} ({symbol.code})
+          </h1>
+          <p className="text-sm text-gray-600">{symbol.market} 主板</p>
+        </div>
+        <PeriodSelector defaultPeriod={period} />
       </div>
 
       <Alert variant="destructive" className="mb-4">
