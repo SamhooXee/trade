@@ -166,7 +166,57 @@
     "errors": {
       "name_required": "策略名称不能为空",
       "name_too_long": "策略名称不能超过 100 字符",
-      "invalid_spec": "策略配置无效"
+      "invalid_spec": "策略配置无效",
+      "invalid_date": "日期格式无效 (YYYY-MM-DD)",
+      "end_before_start": "结束日期不能早于开始日期",
+      "invalid_cash": "初始资金必须为正数",
+      "strategy_not_found": "策略不存在",
+      "backtest_failed": "回测运行失败",
+      "insert_failed": "回测记录创建失败"
+    },
+    "backtest": {
+      "listTitle": "历史回测",
+      "newButton": "运行回测",
+      "empty": "还没有回测运行,从策略详情页创建一个",
+      "form": {
+        "title": "运行回测",
+        "startDate": "开始日期",
+        "endDate": "结束日期",
+        "initialCash": "初始资金",
+        "submit": "开始回测",
+        "submitting": "回测运行中...",
+        "cancel": "取消"
+      },
+      "list": {
+        "runAt": "运行时间",
+        "strategy": "策略",
+        "period": "回测区间",
+        "totalReturn": "总收益",
+        "status": "状态",
+        "view": "查看"
+      },
+      "status": {
+        "running": "运行中",
+        "completed": "已完成",
+        "failed": "失败"
+      },
+      "report": {
+        "title": "回测报告",
+        "summary": "策略在 {from} 至 {to} 的回测表现",
+        "noTrades": "本次回测没有产生交易",
+        "tradesTable": "交易明细",
+        "equityCurve": "权益曲线"
+      }
+    },
+    "metrics": {
+      "totalReturn": "总收益",
+      "annualizedReturn": "年化收益",
+      "maxDrawdown": "最大回撤",
+      "sharpeRatio": "夏普比率",
+      "winRate": "胜率",
+      "totalTrades": "总交易笔数",
+      "avgHoldingDays": "平均持仓天数",
+      "finalEquity": "最终权益"
     }
   }
 }

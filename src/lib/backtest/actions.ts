@@ -33,17 +33,17 @@ export async function createBacktestRunAction(
   const initialCashRaw = Number(formData.get('initialCash') ?? 1_000_000)
 
   if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate) || !/^\d{4}-\d{2}-\d{2}$/.test(endDate)) {
-    return { fieldErrors: { date: ['errors.invalid_date'] } }
+    return { fieldErrors: { date: ['quant.errors.invalid_date'] } }
   }
   if (new Date(endDate) < new Date(startDate)) {
-    return { fieldErrors: { date: ['errors.end_before_start'] } }
+    return { fieldErrors: { date: ['quant.errors.end_before_start'] } }
   }
   if (!(initialCashRaw > 0)) {
-    return { fieldErrors: { initialCash: ['errors.invalid_cash'] } }
+    return { fieldErrors: { initialCash: ['quant.errors.invalid_cash'] } }
   }
 
   const strategy = await getStrategy(strategyId)
-  if (!strategy) return { error: 'errors.strategy_not_found' }
+  if (!strategy) return { error: 'quant.errors.strategy_not_found' }
 
   // 1. 插入 running 行
   const { data: inserted, error: insertErr } = await supabase
@@ -58,7 +58,7 @@ export async function createBacktestRunAction(
     })
     .select('id')
     .single()
-  if (insertErr || !inserted) return { error: insertErr?.message ?? 'errors.insert_failed' }
+  if (insertErr || !inserted) return { error: insertErr?.message ?? 'quant.errors.insert_failed' }
 
   const runId = inserted.id
 
@@ -102,7 +102,7 @@ export async function createBacktestRunAction(
         completed_at: new Date().toISOString(),
       })
       .eq('id', runId)
-    return { error: 'errors.backtest_failed' }
+    return { error: 'quant.errors.backtest_failed' }
   }
 
   revalidatePath('/backtest')

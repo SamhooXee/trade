@@ -166,7 +166,57 @@
     "errors": {
       "name_required": "Strategy name is required",
       "name_too_long": "Strategy name must be ≤ 100 characters",
-      "invalid_spec": "Invalid strategy configuration"
+      "invalid_spec": "Invalid strategy configuration",
+      "invalid_date": "Invalid date format (YYYY-MM-DD)",
+      "end_before_start": "End date must be on or after start date",
+      "invalid_cash": "Initial cash must be positive",
+      "strategy_not_found": "Strategy not found",
+      "backtest_failed": "Backtest failed",
+      "insert_failed": "Failed to create backtest record"
+    },
+    "backtest": {
+      "listTitle": "Backtest History",
+      "newButton": "Run Backtest",
+      "empty": "No backtest runs yet. Create one from a strategy detail page.",
+      "form": {
+        "title": "Run Backtest",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "initialCash": "Initial Cash",
+        "submit": "Run Backtest",
+        "submitting": "Running backtest...",
+        "cancel": "Cancel"
+      },
+      "list": {
+        "runAt": "Run At",
+        "strategy": "Strategy",
+        "period": "Period",
+        "totalReturn": "Total Return",
+        "status": "Status",
+        "view": "View"
+      },
+      "status": {
+        "running": "Running",
+        "completed": "Completed",
+        "failed": "Failed"
+      },
+      "report": {
+        "title": "Backtest Report",
+        "summary": "Strategy performance from {from} to {to}",
+        "noTrades": "This backtest produced no trades.",
+        "tradesTable": "Trades",
+        "equityCurve": "Equity Curve"
+      }
+    },
+    "metrics": {
+      "totalReturn": "Total Return",
+      "annualizedReturn": "Annualized Return",
+      "maxDrawdown": "Max Drawdown",
+      "sharpeRatio": "Sharpe Ratio",
+      "winRate": "Win Rate",
+      "totalTrades": "Total Trades",
+      "avgHoldingDays": "Avg Holding Days",
+      "finalEquity": "Final Equity"
     }
   }
 }
