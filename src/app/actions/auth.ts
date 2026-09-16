@@ -41,7 +41,7 @@ export async function signInAction(
   const { error } = await supabase.auth.signInWithPassword(parsed.data)
   if (error) return { error: mapAuthError(error) }
 
-  redirect('/dashboard')
+  redirect('/market')
 }
 
 export async function signUpAction(
@@ -64,7 +64,7 @@ export async function signUpAction(
   })
   if (error) return { error: mapAuthError(error) }
 
-  redirect('/dashboard')
+  redirect('/market')
 }
 
 export async function signOutAction(_formData: FormData): Promise<void> {

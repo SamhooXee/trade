@@ -20,7 +20,7 @@ export default async function BacktestReportPage({ params }: PageProps) {
   const {
     data: { user },
   } = await supabase.auth.getUser()
-  if (!user) redirect('/auth/sign-in')
+  if (!user) redirect('/')
 
   const { id } = await params
   const run = await getBacktestRun(id)

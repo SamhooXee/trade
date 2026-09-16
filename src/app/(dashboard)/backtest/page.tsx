@@ -13,7 +13,7 @@ export default async function BacktestListPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser()
-  if (!user) redirect('/auth/sign-in')
+  if (!user) redirect('/')
 
   const lang = await getLanguage()
   const runs = await listBacktestRuns()

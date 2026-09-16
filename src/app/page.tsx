@@ -6,7 +6,7 @@ import { LanguageSwitcher } from '@/components/providers/language-provider'
 export default async function HomePage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (user) redirect('/dashboard')
+  if (user) redirect('/market')
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-4 relative">

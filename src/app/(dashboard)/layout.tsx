@@ -11,7 +11,7 @@ export default async function DashboardLayout({
   const {
     data: { user },
   } = await supabase.auth.getUser()
-  if (!user) redirect('/auth/sign-in')
+  if (!user) redirect('/')
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50">

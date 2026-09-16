@@ -19,7 +19,7 @@ export default async function TradesPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser()
-  if (!user) redirect('/auth/sign-in')
+  if (!user) redirect('/')
 
   const fills = await listFills(200)
 

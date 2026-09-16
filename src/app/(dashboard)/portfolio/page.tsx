@@ -24,7 +24,7 @@ export default async function PortfolioPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser()
-  if (!user) redirect('/auth/sign-in')
+  if (!user) redirect('/')
 
   const lang = await getLanguage()
   const portfolios = await listPortfolios()
