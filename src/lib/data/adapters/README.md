@@ -1,37 +1,73 @@
-# 行情数据适配器
+# 真实数据源接入指南
 
-本目录包含 `MarketDataProvider` 的所有实现。生产环境通过 `MARKET_DATA_PROVIDER` 环境变量切换。
+> 本期(MVP)只实现 `MockDataProvider`(确定性伪随机,GBM)。
+> 本文件说明**未来**如何接入 Tushare / AkShare / 通联等真实数据源。
 
-## 当前实现
+## 1. 目标
 
-| Provider | 环境变量值 | 状态 |
-|---|---|---|
-| MockDataProvider | (默认, 或 `mock`) | ✅ 已实现, 用于本地开发与测试 |
-| TushareDataProvider | `tushare` | 🚧 待实现 |
-| AkShareDataProvider | `akshare` | 🚧 待实现 |
+实现一个新的 `MarketDataProvider`(例如 `TushareDataProvider`),被
+`/api/cron/ingest-daily` 与 `ingest-minute` 通过依赖注入使用,**不**修改任何
+cron 端点或回测引擎代码。
 
-## 接入新数据源
+## 2. 文件结构
 
-实现 `MarketDataProvider` 接口,放在 `adapters/<name>.ts`,然后在 `src/lib/data/index.ts` 的 `getProvider()` 工厂中添加分支。
+```
+src/lib/data/adapters/
+├── mock.ts          # 模拟数据(本期默认)
+├── tushare.ts       # Tushare Pro(后续 phase)
+├── akshare.ts       # AkShare(后续 phase)
+└── README.md        # 本文件
+```
+
+## 3. 接口
+
+见 `src/lib/data/provider.ts`:
 
 ```ts
-import type { MarketDataProvider } from '../provider'
-
-export class MyProvider implements MarketDataProvider {
-  async listSymbols(): Promise<Symbol[]> {
-    // 调用数据源 API,转换为你接口的形状
-  }
-  // ... 其他方法
+export interface MarketDataProvider {
+  listSymbols(): Promise<SymbolMeta[]>
+  getDailyBars(symbol: string, from: string, to: string): Promise<DailyBar[]>
+  getMinuteBars?(symbol: string, from: string, to: string): Promise<MinuteBar[]>
+  providerKind(): 'mock' | 'tushare' | 'akshare' | string
 }
 ```
 
-数据源 API 通常返回的数据形状不同,需要做字段映射和单位换算 (例如: 成交量是"手"还是"股")。
+## 4. 实现清单(Tushare 为例)
 
-## Mock 数据使用注意
+1. **环境变量**: `TUSHARE_TOKEN` 在 `.env.local` 配置,缺失则启动失败
+2. **限流**: Tushare 普通账户 200 次/分钟,需加 token bucket;`p-queue` 推荐
+3. **数据格式映射**: `ts_code` → `symbol_code`, `trade_date` → `trade_date`(YYYYMMDD → YYYY-MM-DD)
+4. **涨跌停**: 真实数据自带;不需要 matchFill 重算
+5. **停牌**: 真实数据 `vol=0` 时视为停牌;cron 跳过当日因子计算
 
-Mock 数据由 GBM 模型生成,与真实 A 股**形态相似但非真实数据**。Mock 数据用于:
-- 本地开发 UI
-- 单元测试与 E2E 测试
-- 演示
+## 5. 注入入口
 
-Mock 数据**不可用于实际投资决策**。生产环境务必切换到真实数据源。
+在 `src/lib/data/factory.ts`(新建,后续 phase):
+
+```ts
+export function createMarketDataProvider(): MarketDataProvider {
+  if (process.env.DATA_PROVIDER === 'tushare') {
+    return new TushareDataProvider({ token: process.env.TUSHARE_TOKEN! })
+  }
+  return new MockDataProvider({ /* seed */ })
+}
+```
+
+## 6. cron 兼容
+
+现有 `/api/cron/ingest-daily` 调 `getDailyBars` 写入 `trade260915a_quant_daily_bars`。
+真实数据源接入后,只需改 factory;**写入 schema 保持不变**。
+
+## 7. 测试
+
+每个 `<provider>.test.ts` 需覆盖:
+- listSymbols 返回数量 + 字段
+- getDailyBars 时间范围 + 字段(校验 ts_code 映射)
+- providerKind() 返回正确字符串
+- 网络错误重试(用 MSW 或 nock 模拟)
+
+## 8. 回测保真度
+
+真实数据接入后,回测结果会与 mock 差异较大,这是预期行为。建议:
+- 接 Tushare 后跑 1 年回测,验证曲线形状合理
+- 用 mock 跑回归测试,确保算法逻辑不变
