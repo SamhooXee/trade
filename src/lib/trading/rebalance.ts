@@ -8,6 +8,10 @@ export interface RebalanceIntent {
   side: OrderSide
   /** 目标成交金额(BUY:计划买入金额;SELL:按当前持仓市值) */
   targetAmount: number
+  /** 计划股数(可选,Phase 4 风控 modify 用) */
+  shares?: number
+  /** 计划单价(可选,Phase 4 风控 modify 用) */
+  intendedPrice?: number
 }
 
 export interface RebalancePlan {
