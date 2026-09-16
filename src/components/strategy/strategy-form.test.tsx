@@ -9,6 +9,11 @@ vi.mock('@/lib/strategy/actions', () => ({
   updateStrategyAction: vi.fn().mockResolvedValue(null),
 }))
 
+const routerPush = vi.fn()
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: routerPush, back: vi.fn(), refresh: vi.fn() }),
+}))
+
 import { createStrategyAction } from '@/lib/strategy/actions'
 import { StrategyForm } from './strategy-form'
 import { emptySpec } from '@/lib/strategy'
@@ -42,5 +47,27 @@ describe('StrategyForm', () => {
     await user.type(screen.getByLabelText(/策略名称|strategy name/i), '我的策略')
     await user.click(screen.getByRole('button', { name: /保存草稿|save draft/i }))
     expect(createStrategyAction).toHaveBeenCalled()
+  })
+
+  it('navigates to /strategy when cancel clicked in new mode', async () => {
+    const user = userEvent.setup()
+    routerPush.mockClear()
+    renderWith(<StrategyForm initialSpec={emptySpec()} />)
+    await user.click(screen.getByRole('button', { name: /取消|cancel/i }))
+    expect(routerPush).toHaveBeenCalledWith('/strategy')
+  })
+
+  it('navigates to /strategy/<id> when cancel clicked in edit mode', async () => {
+    const user = userEvent.setup()
+    routerPush.mockClear()
+    renderWith(
+      <StrategyForm
+        initialSpec={emptySpec()}
+        strategyId="abc-123"
+        initialName="x"
+      />,
+    )
+    await user.click(screen.getByRole('button', { name: /取消|cancel/i }))
+    expect(routerPush).toHaveBeenCalledWith('/strategy/abc-123')
   })
 })

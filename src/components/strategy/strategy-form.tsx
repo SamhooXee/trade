@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -41,6 +42,9 @@ export function StrategyForm({
   })
 
   const { t } = useLanguage()
+  const router = useRouter()
+
+  const cancelHref = strategyId ? `/strategy/${strategyId}` : '/strategy'
 
   function updateEntryCondition(idx: number, c: Condition) {
     setSpec((s) => ({
@@ -290,7 +294,12 @@ export function StrategyForm({
       </Card>
 
       <div className="flex justify-end gap-3">
-        <Button type="button" variant="outline" disabled={isPending}>
+        <Button
+          type="button"
+          variant="outline"
+          disabled={isPending}
+          onClick={() => router.push(cancelHref)}
+        >
           {t('quant.strategy.fields.cancel')}
         </Button>
         <Button
