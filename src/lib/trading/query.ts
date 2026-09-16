@@ -454,6 +454,28 @@ export async function savePortfolioCashService(
   if (error) throw new Error(`savePortfolioCashService failed: ${error.message}`)
 }
 
+/** service-role 版本:setPortfolioStatus(给 cron 风控 stop 用) */
+export async function setPortfolioStatusService(
+  portfolioId: string,
+  status: 'active' | 'paused' | 'stopped',
+  stopReason: string | null = null,
+): Promise<Portfolio> {
+  const supabase = getServiceRoleClient()
+  const { data, error } = await supabase
+    .from('trade260915a_portfolios')
+    .update({
+      status,
+      stop_reason: stopReason,
+      stopped_at: status === 'stopped' ? new Date().toISOString() : null,
+    })
+    .eq('id', portfolioId)
+    .select('*')
+    .single()
+  if (error)
+    throw new Error(`setPortfolioStatusService failed: ${error.message}`)
+  return toPortfolio(data)
+}
+
 export async function insertRunLogService(log: {
   userId: string
   portfolioId: string
