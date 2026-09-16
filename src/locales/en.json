@@ -172,7 +172,12 @@
       "invalid_cash": "Initial cash must be positive",
       "strategy_not_found": "Strategy not found",
       "backtest_failed": "Backtest failed",
-      "insert_failed": "Failed to create backtest record"
+      "insert_failed": "Failed to create backtest record",
+      "start_failed": "Failed to start strategy",
+      "pause_failed": "Failed to pause strategy",
+      "stop_failed": "Failed to stop strategy",
+      "cancel_failed": "Failed to cancel order",
+      "order_not_cancellable": "Order cannot be cancelled in its current status (only pending orders can be cancelled)"
     },
     "backtest": {
       "listTitle": "Backtest History",
@@ -217,6 +222,70 @@
       "totalTrades": "Total Trades",
       "avgHoldingDays": "Avg Holding Days",
       "finalEquity": "Final Equity"
+    },
+    "trading": {
+      "start": "Start",
+      "pause": "Pause",
+      "resume": "Resume",
+      "stop": "Stop",
+      "started": "Strategy started",
+      "paused": "Strategy paused",
+      "stopped": "Strategy stopped",
+      "startConfirm": "Start this strategy? A paper portfolio will be created with ¥1,000,000 initial cash.",
+      "stopConfirm": "Stop this strategy? No new orders will be generated. Existing positions will not be auto-closed.",
+      "noPortfolio": "No active strategy",
+      "noPortfolioHint": "Click “Start” on a strategy detail page to create a paper portfolio."
+    },
+    "portfolio": {
+      "title": "Portfolio",
+      "summary": {
+        "totalAssets": "Total Assets",
+        "cash": "Cash",
+        "marketValue": "Market Value",
+        "floatingPnl": "Floating P&L",
+        "floatingPnlPct": "P&L %",
+        "todayPnl": "Today P&L",
+        "status": "Status"
+      },
+      "status": {
+        "active": "Active",
+        "paused": "Paused",
+        "stopped": "Stopped"
+      },
+      "positionsTitle": "Positions",
+      "tradesLink": "View trades →",
+      "noPositions": "No positions",
+      "equityCurve": "Equity Curve"
+    },
+    "order": {
+      "title": "Orders",
+      "date": "Date",
+      "symbol": "Symbol",
+      "side": "Side",
+      "shares": "Shares",
+      "intendedPrice": "Intended Price",
+      "status": "Status",
+      "actions": "Actions",
+      "cancel": "Cancel",
+      "cancelConfirm": "Cancel this order?",
+      "statusLabels": {
+        "pending": "Pending",
+        "filled": "Filled",
+        "rejected": "Rejected",
+        "cancelled": "Cancelled"
+      },
+      "rejectedReason": "Rejection Reason"
+    },
+    "fills": {
+      "title": "Trades",
+      "date": "Filled At",
+      "symbol": "Symbol",
+      "side": "Side",
+      "price": "Price",
+      "shares": "Shares",
+      "amount": "Amount",
+      "fee": "Fee",
+      "noFills": "No trades yet"
     }
   }
 }

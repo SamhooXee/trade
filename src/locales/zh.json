@@ -172,7 +172,12 @@
       "invalid_cash": "初始资金必须为正数",
       "strategy_not_found": "策略不存在",
       "backtest_failed": "回测运行失败",
-      "insert_failed": "回测记录创建失败"
+      "insert_failed": "回测记录创建失败",
+      "start_failed": "启动策略失败,请重试",
+      "pause_failed": "暂停策略失败,请重试",
+      "stop_failed": "停止策略失败,请重试",
+      "cancel_failed": "撤销订单失败,请重试",
+      "order_not_cancellable": "该订单当前状态不可撤销(仅挂单可撤销)"
     },
     "backtest": {
       "listTitle": "历史回测",
@@ -217,6 +222,70 @@
       "totalTrades": "总交易笔数",
       "avgHoldingDays": "平均持仓天数",
       "finalEquity": "最终权益"
+    },
+    "trading": {
+      "start": "启动",
+      "pause": "暂停",
+      "resume": "恢复",
+      "stop": "停止",
+      "started": "策略已启动",
+      "paused": "策略已暂停",
+      "stopped": "策略已停止",
+      "startConfirm": "确认启动策略?将创建模拟组合,初始资金 ¥1,000,000",
+      "stopConfirm": "确认停止策略?将不再生成新订单,已持仓不会被自动平仓",
+      "noPortfolio": "尚未启动任何策略",
+      "noPortfolioHint": "从策略详情页点击 “启动” 按钮即可创建模拟组合"
+    },
+    "portfolio": {
+      "title": "当前持仓",
+      "summary": {
+        "totalAssets": "总资产",
+        "cash": "现金",
+        "marketValue": "持仓市值",
+        "floatingPnl": "浮动盈亏",
+        "floatingPnlPct": "盈亏比",
+        "todayPnl": "当日盈亏",
+        "status": "状态"
+      },
+      "status": {
+        "active": "运行中",
+        "paused": "已暂停",
+        "stopped": "已停止"
+      },
+      "positionsTitle": "持仓明细",
+      "tradesLink": "查看成交明细 →",
+      "noPositions": "暂无持仓",
+      "equityCurve": "权益曲线"
+    },
+    "order": {
+      "title": "挂单",
+      "date": "日期",
+      "symbol": "股票",
+      "side": "方向",
+      "shares": "股数",
+      "intendedPrice": "目标价",
+      "status": "状态",
+      "actions": "操作",
+      "cancel": "撤销",
+      "cancelConfirm": "确认撤销该订单?",
+      "statusLabels": {
+        "pending": "挂单中",
+        "filled": "已成交",
+        "rejected": "已拒绝",
+        "cancelled": "已撤销"
+      },
+      "rejectedReason": "拒单原因"
+    },
+    "fills": {
+      "title": "成交明细",
+      "date": "成交日期",
+      "symbol": "股票",
+      "side": "方向",
+      "price": "成交价",
+      "shares": "股数",
+      "amount": "成交金额",
+      "fee": "费用",
+      "noFills": "暂无成交"
     }
   }
 }
