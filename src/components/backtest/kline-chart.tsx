@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { createChart, ColorType, type IChartApi, type ISeriesApi } from 'lightweight-charts'
+import { createChart, ColorType, CandlestickSeries, type IChartApi, type ISeriesApi } from 'lightweight-charts'
 import type { DailyBar } from '@/lib/data'
 
 interface KlineChartProps {
@@ -41,7 +41,7 @@ export function KlineChart({ data, height = 360 }: KlineChartProps) {
     })
     chartRef.current = chart
 
-    const series = chart.addCandlestickSeries({
+    const series = chart.addSeries(CandlestickSeries, {
       upColor: '#ef4444',  // A 股红涨绿跌
       downColor: '#10b981',
       borderUpColor: '#ef4444',
