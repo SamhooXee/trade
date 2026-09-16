@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { listBacktestRuns, type BacktestRunRow } from '@/lib/backtest'
+import { listBacktestRuns, type BacktestRunRow } from '@/lib/backtest/query'
 import { Card, CardContent } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { getLanguage } from '@/lib/i18n'

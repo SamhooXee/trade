@@ -1,7 +1,7 @@
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { getBacktestRun } from '@/lib/backtest'
+import { getBacktestRun } from '@/lib/backtest/query'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { MetricsTable } from '@/components/backtest/metrics-table'

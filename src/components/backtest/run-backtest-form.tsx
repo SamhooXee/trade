@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useLanguage } from '@/components/providers/language-provider'
-import { createBacktestRunAction } from '@/lib/backtest'
+import { createBacktestRunAction } from '@/lib/backtest/actions'
 
 interface RunBacktestFormProps {
   strategyId: string
