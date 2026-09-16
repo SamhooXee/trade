@@ -4,7 +4,8 @@ import { StrategyForm } from '@/components/strategy/strategy-form'
 import { StrategyControls } from '@/components/strategy/strategy-controls'
 import { StrategyActions } from './strategy-actions'
 import { RunBacktestForm } from '@/components/backtest/run-backtest-form'
-import { getPortfolioByStrategy } from '@/lib/trading/query'
+import { getPortfolioByStrategy, listRunLogs } from '@/lib/trading/query'
+import { RiskDecisionLog } from '@/components/strategy/risk-decision-log'
 import { getTranslations } from '@/lib/i18n'
 
 interface PageProps {
@@ -18,6 +19,8 @@ export default async function StrategyDetailPage({ params }: PageProps) {
 
   const { t } = await getTranslations()
   const portfolio = await getPortfolioByStrategy(strategy.id)
+  const runLogs = portfolio ? await listRunLogs(portfolio.id) : []
+  const latestRunLog = runLogs[0]
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -51,6 +54,10 @@ export default async function StrategyDetailPage({ params }: PageProps) {
 
       <section className="mt-6">
         <RunBacktestForm strategyId={strategy.id} />
+      </section>
+
+      <section className="mt-6">
+        <RiskDecisionLog notes={latestRunLog?.notes ?? null} />
       </section>
     </div>
   )
