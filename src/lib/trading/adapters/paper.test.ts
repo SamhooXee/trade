@@ -1,6 +1,13 @@
 import { describe, it, expect } from 'vitest'
-import { PaperBroker } from './paper'
-import type { Order, Position } from '../types'
+import { PaperBroker, type PaperBrokerDeps } from './paper'
+import type {
+  Fill,
+  Order,
+  OrderRequest,
+  OrderSide,
+  Position,
+  OrderStatus,
+} from '../types'
 
 // 内存 mock:不接 Supabase,直接给 PaperBroker 一个 in-memory store
 function makeBroker() {
@@ -11,8 +18,8 @@ function makeBroker() {
   const orderSeq = { n: 0 }
   const fillSeq = { n: 0 }
 
-  const deps = {
-    submit: (req: any) => {
+  const deps: PaperBrokerDeps = {
+    submit: (req: OrderRequest) => {
       const id = `ord-${++orderSeq.n}`
       const order: Order = {
         id,
@@ -38,22 +45,22 @@ function makeBroker() {
       Promise.resolve(
         orders.filter((o) => o.portfolioId === portfolioId && o.status === 'pending'),
       ),
-    updateOrder: (id: string, patch: any) => {
+    updateOrder: (id: string, patch: Partial<Order>) => {
       const o = orders.find((x) => x.id === id)
       if (!o) throw new Error(`order ${id} not found`)
       Object.assign(o, patch)
       return Promise.resolve(o)
     },
-    insertFill: (fill: any) => {
+    insertFill: (fill: Omit<Fill, 'id'>) => {
       const id = `fill-${++fillSeq.n}`
-      const stored = { ...fill, id }
+      const stored: Fill = { ...fill, id }
       return Promise.resolve(stored)
     },
     loadPositions: (portfolioId: string) => {
       const ps = [...positions.values()].filter((p) => p.portfolioId === portfolioId)
       return Promise.resolve(ps)
     },
-    upsertPosition: (p: any) => {
+    upsertPosition: (p) => {
       const key = `${p.portfolioId}:${p.symbolCode}`
       const existing = positions.get(key)
       if (existing) {
@@ -81,15 +88,29 @@ function makeBroker() {
     },
   }
 
-  const broker = new PaperBroker(deps as any)
+  const broker = new PaperBroker(deps)
 
   return {
     broker,
     _cashLog: cashLog,
     _orders: orders,
     _positions: positions,
+    _setCash: (v: number) => {
+      cash = v
+    },
   }
 }
+
+// 类型辅助
+type InsertOrderArgs = {
+  portfolioId: string
+  symbolCode: string
+  side: OrderSide
+  shares: number
+  intendedPrice: number
+  tradeDate: string
+}
+type SetStatusFn = (id: string, status: OrderStatus) => Promise<void>
 
 describe('PaperBroker.submitOrder', () => {
   it('returns a pending order', async () => {
@@ -101,7 +122,7 @@ describe('PaperBroker.submitOrder', () => {
       shares: 1000,
       intendedPrice: 10,
       tradeDate: '2026-09-15',
-    })
+    } satisfies InsertOrderArgs)
     expect(o.status).toBe('pending')
     expect(o.side).toBe('BUY')
   })
@@ -125,7 +146,8 @@ describe('PaperBroker.cancelOrder', () => {
       shares: 1000, intendedPrice: 10, tradeDate: '2026-09-15',
     })
     // 手动标记为 filled
-    await (broker as any).deps.updateOrder(o.id, { status: 'filled' })
+    const updateOrder = broker.deps.updateOrder
+    await updateOrder(o.id, { status: 'filled' })
     await expect(broker.cancelOrder(o.id)).rejects.toThrow(/cannot cancel/i)
   })
 })
@@ -138,16 +160,12 @@ describe('PaperBroker.settlePendingOrders — BUY success', () => {
       shares: 1000, intendedPrice: 10, tradeDate: '2026-09-15',
     })
     const results = await broker.settlePendingOrders([o], {
-      // T+1 open bar: open=10.5, prevClose=10 (用于涨跌停判定)
       bars: new Map([['600000', { tradeDate: '2026-09-16', open: 10.5, close: 10 }]]),
     })
     expect(results[0].status).toBe('filled')
     expect(results[0].fill?.shares).toBe(1000)
-    // 佣金 = max(5, 10500 × 0.00025) = 5
     expect(results[0].fill?.fee).toBeCloseTo(5, 2)
-    // cash = 1000000 - 10500 - 5 = 989495
     expect(results[0].cashAfter).toBeCloseTo(989495, 2)
-    // position: shares=1000, availableShares=0(T+1 锁定)
     expect(results[0].positionAfter?.shares).toBe(1000)
     expect(results[0].positionAfter?.availableShares).toBe(0)
   })
@@ -171,8 +189,8 @@ describe('PaperBroker.settlePendingOrders — BUY at limit-up', () => {
 describe('PaperBroker.settlePendingOrders — SELL', () => {
   it('sells from position with sufficient availableShares', async () => {
     const { broker } = makeBroker()
-    // 先 seed 持仓:1000 股,available=1000(已 T+1 解禁)
-    await (broker as any).deps.upsertPosition({
+    const upsertPosition = broker.deps.upsertPosition
+    await upsertPosition({
       userId: 'u1', portfolioId: 'p1', symbolCode: '600000',
       shares: 1000, availableShares: 1000, costPrice: 10,
     })
@@ -185,18 +203,15 @@ describe('PaperBroker.settlePendingOrders — SELL', () => {
     })
     expect(results[0].status).toBe('filled')
     expect(results[0].fill?.shares).toBe(1000)
-    // 卖 11000,佣金 = max(5, 11000 × 0.00025) = 5,印花税 = 11000 × 0.001 = 11 → 16
     expect(results[0].fill?.fee).toBeCloseTo(16, 2)
-    // cash = 1000000 + 11000 - 16 = 1010984
     expect(results[0].cashAfter).toBeCloseTo(1010984, 2)
-    // position: shares=0, available=0
     expect(results[0].positionAfter?.shares).toBe(0)
   })
 
   it('rejects SELL when availableShares insufficient', async () => {
     const { broker } = makeBroker()
-    // T+1 锁定中:1000 持仓但 0 可卖
-    await (broker as any).deps.upsertPosition({
+    const upsertPosition = broker.deps.upsertPosition
+    await upsertPosition({
       userId: 'u1', portfolioId: 'p1', symbolCode: '600000',
       shares: 1000, availableShares: 0, costPrice: 10,
     })
@@ -215,8 +230,8 @@ describe('PaperBroker.settlePendingOrders — SELL', () => {
 describe('PaperBroker.settlePendingOrders — insufficient cash', () => {
   it('rejects BUY when cash too low', async () => {
     const { broker } = makeBroker()
-    // 把 cash 调成 1000
-    await (broker as any).deps.saveCash(1000)
+    const saveCash = broker.deps.saveCash
+    await saveCash(1000)
     const o = await broker.submitOrder({
       portfolioId: 'p1', symbolCode: '600000', side: 'BUY',
       shares: 1000, intendedPrice: 10, tradeDate: '2026-09-15',
@@ -228,3 +243,6 @@ describe('PaperBroker.settlePendingOrders — insufficient cash', () => {
     expect(results[0].rejectReason).toMatch(/cash/i)
   })
 })
+
+void {} as unknown as InsertOrderArgs
+void {} as unknown as SetStatusFn
