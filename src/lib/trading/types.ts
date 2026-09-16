@@ -84,6 +84,18 @@ export interface StrategyRunLogEntry {
   notes: string | null
 }
 
+/** 组合每日权益快照(Phase 4 风控用) */
+export interface EquitySnapshot {
+  id: string
+  userId: string
+  portfolioId: string
+  tradeDate: string
+  equity: number
+  cash: number
+  marketValue: number
+  recordedAt: string
+}
+
 /** BrokerAdapter 撮合结果(给 PaperBroker.settlePendingOrders 单笔结果) */
 export interface SettleResult {
   orderId: string

@@ -7,6 +7,7 @@ export type {
   Position,
   Fill,
   Portfolio,
+  EquitySnapshot,
   StrategyRunLogEntry,
   SettleResult,
   SettleContext,
