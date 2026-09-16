@@ -18,4 +18,12 @@ export interface BrokerAdapter {
 
   /** 列出指定组合的所有 pending 订单 */
   listPendingOrders(portfolioId: string): Promise<Order[]>
+
+  // ============== 实盘预留字段(本期不实现) ==============
+  /** 实盘券商账户 id(可选;PaperBroker 返回 null) */
+  accountId?(): Promise<string | null>
+  /** 实盘券商 session token(可选;PaperBroker 返回 null) */
+  getSessionToken?(): Promise<string | null>
+  /** 实盘券商类型(可选;PaperBroker 返回 'paper') */
+  brokerKind?(): 'paper' | 'ctp' | 'xtp' | 'uft' | string
 }

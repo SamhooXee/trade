@@ -30,6 +30,18 @@ export interface PaperBrokerDeps {
 export class PaperBroker implements BrokerAdapter {
   constructor(public readonly deps: PaperBrokerDeps) {}
 
+  brokerKind(): string {
+    return 'paper'
+  }
+
+  async accountId(): Promise<string | null> {
+    return null
+  }
+
+  async getSessionToken(): Promise<string | null> {
+    return null
+  }
+
   async submitOrder(req: OrderRequest): Promise<Order> {
     return this.deps.submit(req)
   }

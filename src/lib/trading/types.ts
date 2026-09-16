@@ -11,6 +11,8 @@ export interface OrderRequest {
   intendedPrice: number
   /** 提交交易日 (cron run-strategies 当日) */
   tradeDate: string
+  /** 客户端订单 id(可选,实盘券商用来幂等去重);PaperBroker 忽略 */
+  clientOrderId?: string
 }
 
 /** 订单(数据库 + BrokerAdapter 通用) */
