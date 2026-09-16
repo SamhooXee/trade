@@ -8,7 +8,7 @@ import { getProvider } from '@/lib/data'
 import { isTradingDay } from '@/lib/scheduler'
 import { runBacktest } from './engine'
 
-export interface BacktestFormState {
+export type BacktestFormState = {
   error?: string
   fieldErrors?: Record<string, string[]>
 } | null
