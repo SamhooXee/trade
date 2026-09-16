@@ -11,79 +11,83 @@ function makeBroker() {
   const orderSeq = { n: 0 }
   const fillSeq = { n: 0 }
 
+  const deps = {
+    submit: (req: any) => {
+      const id = `ord-${++orderSeq.n}`
+      const order: Order = {
+        id,
+        userId: 'u1',
+        portfolioId: req.portfolioId,
+        symbolCode: req.symbolCode,
+        side: req.side,
+        shares: req.shares,
+        intendedPrice: req.intendedPrice,
+        tradeDate: req.tradeDate,
+        status: 'pending',
+        rejectReason: null,
+        submittedAt: new Date().toISOString(),
+        filledAt: null,
+        filledPrice: null,
+        filledShares: null,
+        fee: null,
+      }
+      orders.push(order)
+      return Promise.resolve(order)
+    },
+    loadPending: (portfolioId: string) =>
+      Promise.resolve(
+        orders.filter((o) => o.portfolioId === portfolioId && o.status === 'pending'),
+      ),
+    updateOrder: (id: string, patch: any) => {
+      const o = orders.find((x) => x.id === id)
+      if (!o) throw new Error(`order ${id} not found`)
+      Object.assign(o, patch)
+      return Promise.resolve(o)
+    },
+    insertFill: (fill: any) => {
+      const id = `fill-${++fillSeq.n}`
+      const stored = { ...fill, id }
+      return Promise.resolve(stored)
+    },
+    loadPositions: (portfolioId: string) => {
+      const ps = [...positions.values()].filter((p) => p.portfolioId === portfolioId)
+      return Promise.resolve(ps)
+    },
+    upsertPosition: (p: any) => {
+      const key = `${p.portfolioId}:${p.symbolCode}`
+      const existing = positions.get(key)
+      if (existing) {
+        Object.assign(existing, p, { updatedAt: new Date().toISOString() })
+        return Promise.resolve(existing)
+      }
+      const created: Position = {
+        id: `pos-${positions.size + 1}`,
+        userId: p.userId,
+        portfolioId: p.portfolioId,
+        symbolCode: p.symbolCode,
+        shares: p.shares,
+        availableShares: p.availableShares,
+        costPrice: p.costPrice,
+        updatedAt: new Date().toISOString(),
+      }
+      positions.set(key, created)
+      return Promise.resolve(created)
+    },
+    loadCash: () => Promise.resolve(cash),
+    saveCash: (v: number) => {
+      cash = v
+      cashLog.push(v)
+      return Promise.resolve()
+    },
+  }
+
+  const broker = new PaperBroker(deps as any)
+
   return {
-    broker: new PaperBroker({
-      submit: (req) => {
-        const id = `ord-${++orderSeq.n}`
-        const order: Order = {
-          id,
-          userId: 'u1',
-          portfolioId: req.portfolioId,
-          symbolCode: req.symbolCode,
-          side: req.side,
-          shares: req.shares,
-          intendedPrice: req.intendedPrice,
-          tradeDate: req.tradeDate,
-          status: 'pending',
-          rejectReason: null,
-          submittedAt: new Date().toISOString(),
-          filledAt: null,
-          filledPrice: null,
-          filledShares: null,
-          fee: null,
-        }
-        orders.push(order)
-        return Promise.resolve(order)
-      },
-      loadPending: (portfolioId) =>
-        Promise.resolve(
-          orders.filter((o) => o.portfolioId === portfolioId && o.status === 'pending'),
-        ),
-      updateOrder: (id, patch) => {
-        const o = orders.find((x) => x.id === id)
-        if (!o) throw new Error(`order ${id} not found`)
-        Object.assign(o, patch)
-        return Promise.resolve(o)
-      },
-      insertFill: (fill) => {
-        const id = `fill-${++fillSeq.n}`
-        const stored = { ...fill, id }
-        return Promise.resolve(stored)
-      },
-      loadPositions: (portfolioId) => {
-        const ps = [...positions.values()].filter((p) => p.portfolioId === portfolioId)
-        return Promise.resolve(ps)
-      },
-      upsertPosition: (p) => {
-        const key = `${p.portfolioId}:${p.symbolCode}`
-        const existing = positions.get(key)
-        if (existing) {
-          Object.assign(existing, p, { updatedAt: new Date().toISOString() })
-          return Promise.resolve(existing)
-        }
-        const created: Position = {
-          id: `pos-${positions.size + 1}`,
-          userId: p.userId,
-          portfolioId: p.portfolioId,
-          symbolCode: p.symbolCode,
-          shares: p.shares,
-          availableShares: p.availableShares,
-          costPrice: p.costPrice,
-          updatedAt: new Date().toISOString(),
-        }
-        positions.set(key, created)
-        return Promise.resolve(created)
-      },
-      loadCash: () => Promise.resolve(cash),
-      saveCash: (v) => {
-        cash = v
-        cashLog.push(v)
-        return Promise.resolve()
-      },
-      _cashLog: cashLog,
-      _orders: orders,
-      _positions: positions,
-    }),
+    broker,
+    _cashLog: cashLog,
+    _orders: orders,
+    _positions: positions,
   }
 }
 
